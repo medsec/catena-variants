@@ -8,7 +8,7 @@ Note that this framework is supposed to be used for testing. For productive
 environments, we recommend to use the reference implementation.
 
 Reference implementation:
-https://github.com/funkysash/catena
+https://github.com/medsec/catena
 
 Academic paper:
 <a href="http://www.uni-weimar.de/fileadmin/user/fak/medien/professuren/Mediensicherheit/Research/Publications/catena-v3.1.pdf">catena-v3.1.pdf</a>
