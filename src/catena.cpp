@@ -164,6 +164,30 @@ Catena::Server(const uint8_t garlic,  const uint8_t x[H_LEN],
 
 /***************************************************/
 
+void
+Catena::Keyed_Server(const uint8_t garlic, const uint8_t x[H_LEN],
+      const uint8_t *key,   const uint64_t uuid,
+      const uint8_t hashlen, uint8_t *chash)
+{
+  uint8_t z[H_LEN];
+  uint64_t tmp = TO_LITTLE_ENDIAN_64(uuid);
+  int i;
+
+  if (hashlen > H_LEN){
+    throw std::range_error("Catena parameters out of range");
+  }
+  /* finalize */
+  _hash->Hash2(&garlic,1,x, H_LEN, z);
+  memcpy(chash, z, hashlen);
+
+  /* encrypt with z=keystream*/
+  _hash->Hash4(key, KEY_LEN,  (uint8_t*) &tmp, 8, &garlic, sizeof(uint8_t), key, 
+      KEY_LEN, z);
+   for(i=0; i<hashlen; i++) chash[i] ^= z[i];
+}
+
+/***************************************************/
+
 void 
 Catena::CI_Update(const uint8_t *old_hash,  const uint8_t lambda,
          const uint8_t *salt,  const uint8_t saltlen,

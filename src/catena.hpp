@@ -67,6 +67,16 @@ public:
 	void Server(const uint8_t garlic, const uint8_t x[H_LEN],
 			  const uint8_t hashlen, uint8_t *hash);
 
+	/*  Computes the final step of the password hashing process. Requires the
+	 *  output of Catena_Client(...) as input. The resulting hash is encrypted
+	 * 	with H(key || uuid || key) where key denotes a KEY_LEN-byte key and uuid 
+	 * 	denotes a *UNIQUE* user ID.
+	 *  Returns -1 if an an error occurred, otherwise 0.
+	 */
+	void Keyed_Server(const uint8_t garlic, const uint8_t x[H_LEN],
+			const uint8_t *key,   const uint64_t uuid,
+			const uint8_t hashlen, uint8_t *chash);
+
 	/* Client independent update form an old hash */
 	void CI_Update(const uint8_t *old_hash,  const uint8_t lambda,
 			   const uint8_t *salt,  const uint8_t saltlen,
