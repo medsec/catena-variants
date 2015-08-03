@@ -29,7 +29,9 @@ class GFMul :  public HashFast<GFMul>
 	
 	private:
 	#ifdef __PCLMUL__
-	// Bitwise shift for __m128i types
+	/* Bitwise shift for __m128i types. a is shifted by count bits
+	* with count <= 64
+	*/
 	__m128i sll128(__m128i a, uint8_t count);
 	/* Galois Field multiplication in GF2^128 with modulus x^128+x^7+x^2+x+1
 	* see "Intel® Carry-Less Multiplication Instruction and its Usage for Computing
