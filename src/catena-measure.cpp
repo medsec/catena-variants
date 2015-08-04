@@ -249,7 +249,7 @@ int main(int argc, char **argv)
 		std::cout << std::fixed << std::setprecision(2);
 		std::cout << "Hashing took " << t << "s and required roughly " <<
 			(CatenaFactory::instance().getGraph(graph)->getMemoryRequirement(g) 
-				/HASH_PER_KiB) << " KiB of memory" <<std::endl;
+				/1024) << " KiB of memory" <<std::endl;
 	}
 	catch (std::exception& e)
 	{
