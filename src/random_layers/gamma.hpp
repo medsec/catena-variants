@@ -11,7 +11,7 @@ public:
 	/* Gamma Layer of Catena-DBG and -BRG using XorShift1024*
 	* see: http://en.wikipedia.org/wiki/Xorshift#Variations
 	*/
-	virtual void process(const uint8_t x[H_LEN], const uint8_t lambda,
+	virtual void process(const uint8_t* x, const uint8_t lambda,
 					const uint8_t garlic, const uint8_t *salt, 
                   	const uint8_t saltlen, uint8_t *r);
 

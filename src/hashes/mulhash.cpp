@@ -18,7 +18,7 @@ MulHash::ResetState() {}
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
 MulHash::Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
-			uint8_t hash[H_LEN])
+			uint8_t* hash)
 {
 	/* Cast to uint32 */
 	const uint32_t *prevBlock = (const uint32_t *)(const void *)i1;
@@ -34,3 +34,8 @@ MulHash::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
 	}
 }
 #pragma GCC diagnostic pop
+
+uint16_t
+MulHash::getHlenFast()const{
+  return H_LEN_FAST;
+}

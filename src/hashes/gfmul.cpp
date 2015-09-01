@@ -83,7 +83,7 @@ GFMul::gfmul128(__m128i A, __m128i B)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
 GFMul::Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
-			uint8_t hash[H_LEN])
+			uint8_t* hash)
 {
   int blocks = H_LEN/sizeof(__m128i);
   __m128i left, right, result;
@@ -186,3 +186,8 @@ GFMul::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
 #pragma GCC diagnostic pop
 
 #endif
+
+uint16_t
+GFMul::getHlenFast()const{
+  return H_LEN_FAST;
+}

@@ -25,8 +25,8 @@ Blake2b::Hash1(const uint8_t *input, const uint32_t inputlen,
 /***************************************************/
 
 void
-Blake2b::Hash2(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
+Blake2b::Hash2(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
 		    uint8_t hash[H_LEN]) const
 {
   blake2b_state ctx;
@@ -41,9 +41,9 @@ Blake2b::Hash2(const uint8_t *i1, const uint8_t i1len,
 /***************************************************/
 
 void
-Blake2b::Hash3(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
-		    const uint8_t *i3, const uint8_t i3len,
+Blake2b::Hash3(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
+		    const uint8_t *i3, const uint16_t i3len,
 		    uint8_t hash[H_LEN]) const
 {
   blake2b_state ctx;
@@ -57,10 +57,10 @@ Blake2b::Hash3(const uint8_t *i1, const uint8_t i1len,
 /***************************************************/
 
 void
-Blake2b::Hash4(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
-		    const uint8_t *i3, const uint8_t i3len,
-		     const uint8_t *i4, const uint8_t i4len,
+Blake2b::Hash4(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
+		    const uint8_t *i3, const uint16_t i3len,
+		     const uint8_t *i4, const uint16_t i4len,
 		    uint8_t hash[H_LEN]) const
 {
   blake2b_state ctx;
@@ -76,11 +76,11 @@ Blake2b::Hash4(const uint8_t *i1, const uint8_t i1len,
 /***************************************************/
 
 void
-Blake2b::Hash5(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
-		    const uint8_t *i3, const uint8_t i3len,
-		    const uint8_t *i4, const uint8_t i4len,
-		    const uint8_t *i5, const uint8_t i5len,
+Blake2b::Hash5(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
+		    const uint8_t *i3, const uint16_t i3len,
+		    const uint8_t *i4, const uint16_t i4len,
+		    const uint8_t *i5, const uint16_t i5len,
 		    uint8_t hash[H_LEN]) const
 {
   blake2b_state ctx;
@@ -97,7 +97,7 @@ Blake2b::Hash5(const uint8_t *i1, const uint8_t i1len,
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
 Blake2b::Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
-			uint8_t hash[H_LEN])
+			uint8_t* hash)
 {
 	Hash2(i1, H_LEN, i2, H_LEN, hash);
 }
@@ -105,3 +105,8 @@ Blake2b::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
 
 
 void Blake2b::ResetState(){}
+
+uint16_t
+Blake2b::getHlenFast()const{
+  return H_LEN_FAST;
+}

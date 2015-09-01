@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <cstring>
-
 #include "default_algorithm.hpp"
 #include "../registry.hpp"
 
@@ -16,26 +15,27 @@ DefaultAlgorithm::DefaultAlgorithm()
 }
 
 void
-DefaultAlgorithm::flap(const uint8_t x[H_LEN], const uint8_t lambda, 
+DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const uint8_t lambda, 
 	const uint8_t garlic, const uint8_t *salt, const uint8_t saltlen, 
-	uint8_t h[H_LEN])
+	uint8_t* h)
 {
+	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	const uint64_t c = UINT64_C(1) << garlic;
 	/* allocate memory for all further steps */
 	uint8_t *r = (uint8_t*) malloc(_graph->getMemoryRequirement(garlic));
+	uint8_t *vm2 = (uint8_t*) malloc(H_LEN_FAST);
+	uint8_t *vm1 = (uint8_t*) malloc(H_LEN_FAST);
+
+	H_INIT(x, xlen, vm1, vm2);
+
+	_hashfast->ResetState();
+	_hashfast->Hash(0, vm1, vm2, r);
+	_hashfast->Hash(1, r, vm1, r+H_LEN_FAST);
 
 	/* Top row */
-	uint8_t *tmp = (uint8_t*) malloc(H_LEN);
-
-	memcpy(tmp, x, H_LEN);
-	tmp[H_LEN-1] ^= 1;
-	_hashfull->Hash2(x, H_LEN, tmp, H_LEN, r); //v_0 <- H(x||xXOR1)
-	_hashfast->ResetState();
-
-	_hashfast->Hash(1, r, x, r+H_LEN); //v_1 <- H'(v_0||x)
 
 	for(uint64_t i = 2; i < c; i++){
-		_hashfast->Hash(i, r + (i-1)*H_LEN, r + (i-2)*H_LEN, r + i*H_LEN);
+		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
 
 	/*Gamma Function => RandomLayer*/
@@ -46,5 +46,19 @@ DefaultAlgorithm::flap(const uint8_t x[H_LEN], const uint8_t lambda,
 
 	/*Clean up*/
 	free(r);
-	free(tmp);
+	free(vm2);
+	free(vm1);
+}
+
+void 
+DefaultAlgorithm::H_INIT(const uint8_t* x, const uint16_t xlen,  uint8_t *vm1, uint8_t *vm2){
+	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
+	const uint8_t l = 2* H_LEN_FAST/H_LEN;
+	uint8_t *tmp = (uint8_t*) malloc(l*H_LEN);
+
+	for(uint8_t i=0; i!=l;++i){
+		_hashfull->Hash2(&i, 1, x, xlen, tmp+i*H_LEN);
+	}
+	memcpy(vm1, tmp, H_LEN_FAST);
+	memcpy(vm2, tmp+(l/2*H_LEN), H_LEN_FAST);
 }

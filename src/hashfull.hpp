@@ -19,29 +19,29 @@ public:
 			    uint8_t hash[H_LEN])const =0;
 
 
-	virtual void Hash2(const uint8_t *i1, const uint8_t i1len,
-			    const uint8_t *i2, const uint8_t i2len,
+	virtual void Hash2(const uint8_t *i1, const uint16_t i1len,
+			    const uint8_t *i2, const uint16_t i2len,
 			    uint8_t hash[H_LEN])const =0;
 
 
-	virtual void Hash3(const uint8_t *i1, const uint8_t i1len,
-			    const uint8_t *i2, const uint8_t i2len,
-			    const uint8_t *i3, const uint8_t i3len,
+	virtual void Hash3(const uint8_t *i1, const uint16_t i1len,
+			    const uint8_t *i2, const uint16_t i2len,
+			    const uint8_t *i3, const uint16_t i3len,
 			    uint8_t hash[H_LEN])const =0;
 
 
-	virtual void Hash4(const uint8_t *i1, const uint8_t i1len,
-			    const uint8_t *i2, const uint8_t i2len,
-			    const uint8_t *i3, const uint8_t i3len,
-			    const uint8_t *i4, const uint8_t i4len,
+	virtual void Hash4(const uint8_t *i1, const uint16_t i1len,
+			    const uint8_t *i2, const uint16_t i2len,
+			    const uint8_t *i3, const uint16_t i3len,
+			    const uint8_t *i4, const uint16_t i4len,
 			    uint8_t hash[H_LEN])const =0;
 
 
-	virtual void Hash5(const uint8_t *i1, const uint8_t i1len,
-			    const uint8_t *i2, const uint8_t i2len,
-			    const uint8_t *i3, const uint8_t i3len,
-			    const uint8_t *i4, const uint8_t i4len,
-			    const uint8_t *i5, const uint8_t i5len,
+	virtual void Hash5(const uint8_t *i1, const uint16_t i1len,
+			    const uint8_t *i2, const uint16_t i2len,
+			    const uint8_t *i3, const uint16_t i3len,
+			    const uint8_t *i4, const uint16_t i4len,
+			    const uint8_t *i5, const uint16_t i5len,
 			    uint8_t hash[H_LEN])const =0;
 
 };

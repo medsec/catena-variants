@@ -18,11 +18,13 @@ public:
 	/* Reduced Hash function. The 2 Inputs are expected to be of size H_LEN
 	 */
 	virtual void Hash(int vindex, const uint8_t* i1, 
-    		const uint8_t* i2, uint8_t hash[H_LEN])=0;
+    		const uint8_t* i2, uint8_t* hash)=0;
 
 	/* Resets the State used for HashFast if necessary
 	*/
 	virtual void ResetState()=0;
+
+	virtual uint16_t getHlenFast()const =0;
 
 };
 
@@ -44,7 +46,7 @@ public:
 	/* Reduced Hash function. The 2 Inputs are expected to be of size H_LEN
 	 */
 	virtual void Hash(int vindex, const uint8_t* i1, 
-    		const uint8_t* i2, uint8_t hash[H_LEN])=0;
+    		const uint8_t* i2, uint8_t* hash)=0;
 
 	/* Resets the State used for HashFast if necessary
 	*/

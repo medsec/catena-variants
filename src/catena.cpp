@@ -29,6 +29,9 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
 	     const uint8_t garlic, const size_t  hashlen,
 	     const uint8_t client, const uint8_t  tweak_id, uint8_t *hash)
 {
+  const uint16_t H_LEN_FAST = _algorithm->getHlenFast();
+  uint8_t* x_long = (uint8_t*) malloc(H_LEN_FAST);
+
   uint8_t x[H_LEN];
   uint8_t hv[H_LEN];
   uint8_t t[4];
@@ -67,17 +70,23 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
   }
 
 
-  _algorithm->flap(x, lambda, (min_garlic+1)/2, salt, saltlen, x);
+  _algorithm->flap(x, H_LEN, lambda, (min_garlic+1)/2, salt, saltlen, x_long);
 
   for(c=min_garlic; c <= garlic; c++)
   {
-      _algorithm->flap(x, lambda, c, salt, saltlen, x);
+      if(c==min_garlic){
+        _algorithm->flap(x_long,H_LEN_FAST, lambda, c, salt, saltlen, x_long);  
+      }
+      else{
+        _algorithm->flap(x,H_LEN, lambda, c, salt, saltlen, x_long);
+      }
+      
       if( (c==garlic) && (client == CLIENT))
       {
-        memcpy(hash, x, H_LEN);
+        memcpy(hash, x_long, H_LEN);
         return;
       }
-      _hash->Hash2(&c,1, x,H_LEN, x);
+      _hash->Hash2(&c,1, x_long,H_LEN_FAST, x);
       memset(x+hashlen, 0, H_LEN-hashlen);
   }
   memcpy(hash, x, hashlen);
@@ -202,7 +211,7 @@ Catena::CI_Update(const uint8_t *old_hash,  const uint8_t lambda,
 
   for(c=old_garlic+1; c <= new_garlic; c++)
     {
-      _algorithm->flap(x, lambda, c, salt, saltlen, x);
+      _algorithm->flap(x,H_LEN, lambda, c, salt, saltlen, x);
       _hash->Hash2(&c,1,x, H_LEN, x);
       memset(x+hashlen, 0, H_LEN-hashlen);
     }
@@ -325,4 +334,10 @@ uint8_t
 Catena::getDefaulMinGarlic()const
 {
   return _algorithm->getDefaulMinGarlic();
+}
+
+uint64_t 
+Catena::getMemoryRequirement(uint8_t garlic)const
+{
+  return _algorithm->getMemoryRequirement(garlic);
 }

@@ -28,8 +28,8 @@ SHA_512::Hash1(const uint8_t *input, const uint32_t inputlen,
 /***************************************************/
 
 void
-SHA_512::Hash2(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
+SHA_512::Hash2(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
 		    uint8_t hash[H_LEN]) const
 {
   SHA512_CTX ctx;
@@ -44,9 +44,9 @@ SHA_512::Hash2(const uint8_t *i1, const uint8_t i1len,
 /***************************************************/
 
 void
-SHA_512::Hash3(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
-		    const uint8_t *i3, const uint8_t i3len,
+SHA_512::Hash3(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
+		    const uint8_t *i3, const uint16_t i3len,
 		    uint8_t hash[H_LEN]) const
 {
 
@@ -61,10 +61,10 @@ SHA_512::Hash3(const uint8_t *i1, const uint8_t i1len,
 /***************************************************/
 
 void
-SHA_512::Hash4(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
-		    const uint8_t *i3, const uint8_t i3len,
-		     const uint8_t *i4, const uint8_t i4len,
+SHA_512::Hash4(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
+		    const uint8_t *i3, const uint16_t i3len,
+		     const uint8_t *i4, const uint16_t i4len,
 		    uint8_t hash[H_LEN]) const
 {
   SHA512_CTX ctx;
@@ -80,11 +80,11 @@ SHA_512::Hash4(const uint8_t *i1, const uint8_t i1len,
 /***************************************************/
 
 void
-SHA_512::Hash5(const uint8_t *i1, const uint8_t i1len,
-		    const uint8_t *i2, const uint8_t i2len,
-		    const uint8_t *i3, const uint8_t i3len,
-		    const uint8_t *i4, const uint8_t i4len,
-		    const uint8_t *i5, const uint8_t i5len,
+SHA_512::Hash5(const uint8_t *i1, const uint16_t i1len,
+		    const uint8_t *i2, const uint16_t i2len,
+		    const uint8_t *i3, const uint16_t i3len,
+		    const uint8_t *i4, const uint16_t i4len,
+		    const uint8_t *i5, const uint16_t i5len,
 		    uint8_t hash[H_LEN]) const
 {
   SHA512_CTX ctx;
@@ -105,7 +105,7 @@ SHA_512::Hash5(const uint8_t *i1, const uint8_t i1len,
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
 SHA_512::Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
-      uint8_t hash[H_LEN])
+      uint8_t* hash)
 {
   Hash2(i1, H_LEN, i2, H_LEN, hash);
 }
@@ -113,3 +113,8 @@ SHA_512::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
 
 
 void SHA_512::ResetState(){}
+
+uint16_t
+SHA_512::getHlenFast()const{
+  return H_LEN_FAST;
+}

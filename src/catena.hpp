@@ -29,6 +29,7 @@ public:
  	uint8_t getDefaultGarlic() const;
  	uint8_t getDefaulMinGarlic() const;
 	const uint8_t* getDefaultVersionID() const;
+	uint64_t getMemoryRequirement(uint8_t garlic) const;
 
 	/* Default mode of invocation */
 	void Default(uint8_t *pwd,   const uint32_t pwdlen,

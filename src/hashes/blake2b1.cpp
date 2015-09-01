@@ -322,7 +322,7 @@ static inline void blake2round(blake2b_state* S,
 
 void 
 Blake2b1::Hash(int vindex, const uint8_t* i1, 
-       const uint8_t* i2, uint8_t hash[H_LEN]){
+       const uint8_t* i2, uint8_t* hash){
   uint8_t buffer[BLAKE2B_OUTBYTES];
 
   memcpy(_state->buf, i1, H_LEN);
@@ -341,3 +341,8 @@ Blake2b1::Hash(int vindex, const uint8_t* i1,
 }
 
 #endif
+
+uint16_t
+Blake2b1::getHlenFast()const{
+  return H_LEN_FAST;
+}

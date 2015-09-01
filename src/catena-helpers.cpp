@@ -6,10 +6,10 @@
 
 namespace Catena_Variants{
 
-void XOR(const uint8_t *input1, const uint8_t *input2, uint8_t *output)
+void XOR(const uint8_t *input1, const uint8_t *input2, uint8_t *output, uint16_t LEN)
 {
 #ifdef __SSE2__
-  int blocks = H_LEN/sizeof(__m128i);
+  int blocks = LEN/sizeof(__m128i);
   for(int i = 0; i < blocks; i++){
     __m128i left = _mm_load_si128((__m128i*) (input1 + (i*sizeof(__m128i))));
     __m128i right = _mm_load_si128((__m128i*) (input2 + (i*sizeof(__m128i))));
@@ -18,7 +18,7 @@ void XOR(const uint8_t *input1, const uint8_t *input2, uint8_t *output)
   }
 #else
   uint32_t i;
-  for(i = 0; i < H_LEN; i++){
+  for(i = 0; i < LEN; i++){
     output[i] = input1[i] ^ input2[i];
   }
 #endif

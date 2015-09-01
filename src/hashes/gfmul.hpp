@@ -21,17 +21,17 @@ class GFMul :  public HashFast<GFMul>
 		/*Takes two H_LEN Inputs and multiplies them in 128 bit blocks in a GF2^128
 	 	*/
 		virtual void Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
-			uint8_t hash[H_LEN]);
+			uint8_t* hash);
 
 		/* Does nothing
 		*/
 		virtual void ResetState(); 
+
+		virtual uint16_t getHlenFast()const;
 	
 	private:
 	#ifdef __PCLMUL__
-	/* Bitwise shift for __m128i types. a is shifted by count bits
-	* with count <= 64
-	*/
+	// Bitwise shift for __m128i types
 	__m128i sll128(__m128i a, uint8_t count);
 	/* Galois Field multiplication in GF2^128 with modulus x^128+x^7+x^2+x+1
 	* see "Intel® Carry-Less Multiplication Instruction and its Usage for Computing
@@ -49,6 +49,8 @@ class GFMul :  public HashFast<GFMul>
 	void gfmul128(const uint64_t* a, const uint64_t* b, uint64_t* r);
 	
 	#endif
+
+	uint16_t const H_LEN_FAST = 64;
 
 };
 }
