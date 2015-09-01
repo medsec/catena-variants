@@ -1,7 +1,7 @@
 #include "cfaes.hpp"
 #include "../registry.hpp"
 //#include <thread>
-#if defined(__aSSE2__)
+#if defined(__SSE2__)
 //SSE optimized
 #include <emmintrin.h>
 #include <wmmintrin.h>
@@ -17,7 +17,7 @@ Registry<Cfaes> regcfaes;
 
 Cfaes::Cfaes()
 :Registerable("CFAES", "Cfaes", 
-	"CFAES")
+	"CFAES Hash function");
 {}
 
 void
