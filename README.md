@@ -27,11 +27,17 @@ Algorithms (Flap function):
 * The default algorithm of Catena-Butterfly and -Dragonfly
 
 Hashes (H or H' function):
-* Blake2b
-* Blake2b1, which is a single round of Blake2b
-* SHA512
-* Galois-field multiplication reduced by the GCM polynomial
-* A multiplication-based hash function implemented by Bill Cox 
+* Blake2b (512 bit H' / H)
+* Blake2b1, which is a single round of Blake2b (512 bit H')
+* Blake2b1Bla, which is a single round of Blake2b, using BlaMka (512 bit H')
+* SHA512 (512 bit H' / H)
+* Galois-field multiplication reduced by the GCM polynomial (512 bit H')
+* A multiplication-based hash function implemented by Bill Cox (512 bit H')
+* ArgonCF, Argon2s Compression function (8192 bit H')
+* ArgonCFBla, Argon2s Compression function with BlaMka (8192 bit H')
+* PcompressG, the P function from Argon 2 (512 bit H')
+* PcompressBla, the P function from Argon 2 using BlaMka (512 bit H')
+* CFAES, a Compression Function based on AES (8192 bit H')
 
 RandomLayers (Gamma function):
 * The random layer (Gamma) of Catena-Butterfly and -Dragonfly
@@ -100,7 +106,7 @@ which can be found in `graph.hpp`. YOURCLASS must provide the following methods:
 
     void process(const uint8_t x[H_LEN], const uint8_t lambda, 
                     const uint8_t garlic, const uint8_t *salt, 
-                    const uint8_t saltlen, uint8_t *r, uint8_t h[H_LEN]);
+                    const uint8_t saltlen, uint8_t *r,  uint8_t* h);
 
     uint64_t getMemoryRequirement(uint8_t garlic)const;
     
@@ -120,7 +126,7 @@ which can be found in `hashfast.hpp`. YOURCLASS must provide the following metho
     /* Reduced Hash function. The 2 Inputs are expected to be of size H_LEN
     */
     void Hash(int vindex, const uint8_t* i1, 
-            const uint8_t* i2, uint8_t hash[H_LEN]);
+            const uint8_t* i2, uint8_t hash[H_LEN_FAST]);
     /* Resets the State used for HashFast if necessary
     */
     void ResetState();
@@ -136,26 +142,26 @@ which can be found in `hashfull.hpp`. YOURCLASS must provide the following metho
     void Hash1(const uint8_t *input, const uint32_t inputlen,
                 uint8_t hash[H_LEN])const;
 
-    void Hash2(const uint8_t *i1, const uint8_t i1len,
-                const uint8_t *i2, const uint8_t i2len,
+    void Hash2(const uint8_t *i1, const uint16_t i1len,
+                const uint8_t *i2, const uint16_t i2len,
                 uint8_t hash[H_LEN])const;
 
-    void Hash3(const uint8_t *i1, const uint8_t i1len,
-                const uint8_t *i2, const uint8_t i2len,
-                const uint8_t *i3, const uint8_t i3len,
+    void Hash3(const uint8_t *i1, const uint16_t i1len,
+                const uint8_t *i2, const uint16_t i2len,
+                const uint8_t *i3, const uint16_t i3len,
                 uint8_t hash[H_LEN])const;
 
-    void Hash4(const uint8_t *i1, const uint8_t i1len,
-                const uint8_t *i2, const uint8_t i2len,
-                const uint8_t *i3, const uint8_t i3len,
-                const uint8_t *i4, const uint8_t i4len,
+    void Hash4(const uint8_t *i1, const uint16_t i1len,
+                const uint8_t *i2, const uint16_t i2len,
+                const uint8_t *i3, const uint16_t i3len,
+                const uint8_t *i4, const uint16_t i4len,
                 uint8_t hash[H_LEN])const;
 
-    void Hash5(const uint8_t *i1, const uint8_t i1len,
-                const uint8_t *i2, const uint8_t i2len,
-                const uint8_t *i3, const uint8_t i3len,
-                const uint8_t *i4, const uint8_t i4len,
-                const uint8_t *i5, const uint8_t i5len,
+    void Hash5(const uint8_t *i1, const uint16_t i1len,
+                const uint8_t *i2, const uint16_t i2len,
+                const uint8_t *i3, const uint16_t i3len,
+                const uint8_t *i4, const uint16_t i4len,
+                const uint8_t *i5, const uint16_t i5len,
                 uint8_t hash[H_LEN])const;
 
 Random Layers
