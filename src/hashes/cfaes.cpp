@@ -1,7 +1,7 @@
 #include "cfaes.hpp"
 #include "../registry.hpp"
 //#include <thread>
-#if defined(__SSE2__)
+#if defined(__AES__)
 //SSE optimized
 #include <emmintrin.h>
 #include <wmmintrin.h>
@@ -17,7 +17,7 @@ Registry<Cfaes> regcfaes;
 
 Cfaes::Cfaes()
 :Registerable("CFAES", "Cfaes", 
-	"CFAES Hash function");
+	"CFAES Hash function")
 {}
 
 void
@@ -28,7 +28,7 @@ Cfaes::ResetState()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-#ifdef __aSSE2__
+#ifdef __AES__
 
 #define ROUND_KEYS     11
 #define ROUND_KEYS_FOUR 5
