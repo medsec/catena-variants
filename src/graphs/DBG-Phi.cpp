@@ -1,20 +1,20 @@
-#include "DBG.hpp" 
+#include "DBG-Phi.hpp" 
 #include "../registry.hpp"
 #include "../catena-helpers.hpp"
 
 using namespace Catena_Variants;
 
 //Register the registrable with the Registry so it can be used by CatenaFactory
-Registry<DBG> regDBG;
+Registry<DBG_Phi> regDBG_Phi;
 
-DBG::DBG()
-:Registerable("Double-Butterfly-Graph with Phi Layer", "DBG", "The graph of Catena-Butterfly")
+DBG_Phi::DBG_Phi()
+:Registerable("Double-Butterfly-Graph with Phi Layer", "DBG_Phi", "The graph of Catena-Butterfly")
 {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-DBG::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+DBG_Phi::process(const uint8_t x[H_LEN], const uint8_t lambda, 
 						const uint8_t garlic, const uint8_t *salt, 
 						const uint8_t saltlen, uint8_t *r, uint8_t* h)
 {
@@ -52,12 +52,29 @@ DBG::process(const uint8_t x[H_LEN], const uint8_t lambda,
     co = (co + (i-1)) % 3;
   }
   memcpy(h, r + idx(0,c-1,co,c,m) * H_LEN_FAST, H_LEN_FAST);
+
+  //PHI-Part
+  _hashfast->Hash(0, r, r+R((uint64_t*)(r+H_LEN_FAST*(c-1)), garlic)*H_LEN_FAST, r);
+  uint8_t * p = r;
+  uint8_t * p_old = p;
+  for (i = 1; i < c; i++, p += H_LEN_FAST) {
+      _hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p, p);
+      p_old=p;
+    }
+
+  memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
+
   free(tmp);
 }
 #pragma GCC diagnostic pop
 
+uint64_t
+DBG_Phi::R(uint64_t* input, const uint8_t n){
+  return  input[0]>>(64-n);
+}
+
 uint64_t 
-DBG::sigma(const uint8_t g, const uint64_t i, const uint64_t j)
+DBG_Phi::sigma(const uint8_t g, const uint64_t i, const uint64_t j)
 {
 	if(i < g){
 		return (j ^ (UINT64_C(1) << (g-1-i))); //diagonal front
@@ -69,7 +86,7 @@ DBG::sigma(const uint8_t g, const uint64_t i, const uint64_t j)
 
 
 uint64_t 
-DBG::idx(uint64_t i, uint64_t j, uint8_t co, uint64_t c, uint64_t m)
+DBG_Phi::idx(uint64_t i, uint64_t j, uint8_t co, uint64_t c, uint64_t m)
 {
   i += co;
   if(i % 3 == 0){
@@ -90,7 +107,7 @@ DBG::idx(uint64_t i, uint64_t j, uint8_t co, uint64_t c, uint64_t m)
 
 
 uint64_t 
-DBG::getMemoryRequirement(uint8_t garlic)const
+DBG_Phi::getMemoryRequirement(uint8_t garlic)const
 {
   const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	return ((UINT64_C(1) << garlic) + (UINT64_C(1) << (garlic-1)))  * H_LEN_FAST;
@@ -98,24 +115,24 @@ DBG::getMemoryRequirement(uint8_t garlic)const
 
 
 uint8_t
-DBG::getDefaultLambda()const{
+DBG_Phi::getDefaultLambda()const{
 	return LAMBDA;
 }
 
 
 uint8_t
-DBG::getDefaultGarlic()const{
+DBG_Phi::getDefaultGarlic()const{
 	return GARLIC;
 }
 
 
 uint8_t
-DBG::getDefaulMinGarlic()const{
+DBG_Phi::getDefaulMinGarlic()const{
 	return MIN_GARLIC;
 }
 
 
 const uint8_t*
-DBG::getDefaultVersionID()const{
+DBG_Phi::getDefaultVersionID()const{
 	return (const uint8_t*)VERSION_ID.c_str();
 }

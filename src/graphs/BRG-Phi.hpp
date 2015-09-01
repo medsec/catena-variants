@@ -4,9 +4,9 @@
 
 namespace Catena_Variants {
 
-class GR :  public Graph<GR>{
+class BRG_Phi :  public Graph<BRG_Phi>{
 public:
-	GR();
+	BRG_Phi();
 
 	virtual void process(const uint8_t x[H_LEN], const uint8_t lambda, 
 						const uint8_t garlic, const uint8_t *salt, 
@@ -20,19 +20,19 @@ public:
 	virtual const uint8_t* getDefaultVersionID()const;
 
 private:
-	/*phi(i) = reverse(i) ^ ( ~reverse(i) >> ceil(garlic / 2) )*/
-	uint64_t phi(uint64_t i, uint8_t g);
-
 	/*Return the reverse bit order of x where x is interpreted as n-bit value*/
 	uint64_t reverse(uint64_t x, const uint8_t n);
 
-	std::string const VERSION_ID = "Gray-Rev";
-	//same as BRG because of similar speed
+	void H_First(const uint8_t* i1, const uint8_t* i2, 
+			uint8_t* hash);
+	
+	uint64_t
+	R(uint64_t* input, const uint8_t n);
+
+	std::string const VERSION_ID = "Dragonfly";
 	uint8_t const LAMBDA = 2;
 	uint8_t const GARLIC = 21;
 	uint8_t const MIN_GARLIC = 21;
-
-	void H_First(const uint8_t* i1, const uint8_t* i2, uint8_t* hash);
 };
 
 } //end namespace

@@ -1,22 +1,22 @@
 #include <string.h>
 #include <cmath>
 
-#include "GR.hpp"
+#include "GR3.hpp"
 #include "../registry.hpp"
 
 using namespace Catena_Variants;
 
 //Register the registrable with the Registry so it can be used by CatenaFactory
-Registry<GR> regGR;
+Registry<GR3> GR3;
 
-GR::GR()
-:Registerable("Gray-Reverse", "GR", "As suggested by Ben Harris. Recommended for Lambda up to 4")
+GR3::GR3()
+:Registerable("Gray-Reverse 3", "GR3", "As suggested by Ben Harris. Recommended for Lambda up to 4")
 {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-GR::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+GR3::process(const uint8_t x[H_LEN], const uint8_t lambda, 
 			const uint8_t garlic, const uint8_t *salt, 
 			const uint8_t saltlen, uint8_t *r, uint8_t* h)
 {
@@ -45,18 +45,18 @@ GR::process(const uint8_t x[H_LEN], const uint8_t lambda,
 #pragma GCC diagnostic pop
 
 uint64_t
-GR::phi(uint64_t i, uint8_t g)
+GR3::phi(uint64_t i, uint8_t g)
 {	
 	const uint64_t rev = reverse(i,g);
 	uint64_t invrev = ~rev;
 	//truncate to g bits
 	invrev <<= (64-g);
-	invrev >>= (64-g) + (int)std::ceil(g / 2);
+	invrev >>= (64-g) + (int)std::ceil(g / 3);
 	return rev ^ invrev;
 }
 
 uint64_t 
-GR::reverse(uint64_t x, const uint8_t n){
+GR3::reverse(uint64_t x, const uint8_t n){
 	x = bswap_64(x);
 	x = ((x & UINT64_C(0x0f0f0f0f0f0f0f0f)) << 4) |
 		((x & UINT64_C(0xf0f0f0f0f0f0f0f0)) >> 4);
@@ -69,7 +69,7 @@ GR::reverse(uint64_t x, const uint8_t n){
 
 
 uint64_t 
-GR::getMemoryRequirement(uint8_t garlic)const
+GR3::getMemoryRequirement(uint8_t garlic)const
 {
 	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	return 2*(UINT64_C(1) << garlic) * H_LEN_FAST;
@@ -77,30 +77,30 @@ GR::getMemoryRequirement(uint8_t garlic)const
 
 
 uint8_t
-GR::getDefaultLambda()const{
+GR3::getDefaultLambda()const{
 	return LAMBDA;
 }
 
 
 uint8_t
-GR::getDefaultGarlic()const{
+GR3::getDefaultGarlic()const{
 	return GARLIC;
 }
 
 
 uint8_t
-GR::getDefaulMinGarlic()const{
+GR3::getDefaulMinGarlic()const{
 	return MIN_GARLIC;
 }
 
 
 const uint8_t*
-GR::getDefaultVersionID()const{
+GR3::getDefaultVersionID()const{
 	return (const uint8_t*)VERSION_ID.c_str();
 }
 
 void 
-GR::H_First(const uint8_t* i1, const uint8_t* i2, uint8_t* hash){
+GR3::H_First(const uint8_t* i1, const uint8_t* i2, uint8_t* hash){
 	_hashfast->ResetState();
 	const uint8_t H_LEN_FAST = _hashfast->getHlenFast();
 	uint8_t *x = (uint8_t*) malloc(H_LEN);
