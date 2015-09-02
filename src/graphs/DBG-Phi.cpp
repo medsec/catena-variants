@@ -8,7 +8,7 @@ using namespace Catena_Variants;
 Registry<DBG_Phi> regDBG_Phi;
 
 DBG_Phi::DBG_Phi()
-:Registerable("Double-Butterfly-Graph with Phi Layer", "DBG_Phi", "The graph of Catena-Butterfly")
+:Registerable("Double-Butterfly-Graph with Phi Layer", "DBG-Phi", "The graph of Catena-Butterfly")
 {}
 
 #pragma GCC diagnostic push
@@ -58,7 +58,7 @@ DBG_Phi::process(const uint8_t x[H_LEN], const uint8_t lambda,
   uint8_t * p = r;
   uint8_t * p_old = p;
   for (i = 1; i < c; i++, p += H_LEN_FAST) {
-      _hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p, p);
+      _hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p_old, p);
       p_old=p;
     }
 

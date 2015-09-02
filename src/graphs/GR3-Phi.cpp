@@ -45,7 +45,7 @@ GR3_Phi::process(const uint8_t x[H_LEN], const uint8_t lambda,
 	uint8_t * p_old = p;
 	p = r + H_LEN_FAST;
 	for (i = 1; i < c; i++, p += H_LEN_FAST) {
-			_hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p, p);
+			_hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p_old, p);
 			p_old=p;
 		}
 
