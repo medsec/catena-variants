@@ -12,6 +12,7 @@ static std::string graph= "";
 static std::string fuh = "";
 static std::string fah = "";
 static std::string rl = "";
+static std::string pl = "";
 static std::string vid = "";
 static std::string pwd = "";
 static uint8_t* salt = NULL;
@@ -26,6 +27,7 @@ void print_usage(char **argv){
 	std::cerr << "Usage: " << argv[0] <<" --algorithm ALG --graph GRAPH" <<
 		" --fullhash FULLH\n" <<
 		" --fasthash FASTH --random_layer RL [--version_id ID]"<< 
+		" --phi_layer PL "<< 
 		"--password PWD\n" <<
 		" [--salt SALT] [--data DATA] [--lambda L] [--min_garlic MG]" << 
 		" [--garlic G]\n" <<
@@ -37,6 +39,7 @@ void print_usage(char **argv){
 		"\t-f, --fasthash FASTH\thash function used for consecutive calls\n" <<
 		"\t\t\t\t(formal: H')\n" <<
 		"\t-r, --random_layer RL\tfirst layer(formal: Gamma)\n" <<
+		"\t-h, --phi_layer PL\textra layer(formal: Phi)\n" <<
 		"\t-v, --version_id ID\tVersion identifier(formal: V). Default depends\n" <<
 		"\t\t\t\ton graph\n"<<
 		"\t-p, --password PWD\tthe password(formal: pwd)\n" <<
@@ -60,6 +63,8 @@ void print_usage(char **argv){
 		CatenaFactory::instance().getFastHashesText() <<
 		"RandomLayers - possible values for RL:\n" <<
 		CatenaFactory::instance().getRandomLayersText() <<
+		"PhiLayers - possible values for PL:\n" <<
+		CatenaFactory::instance().getPhiLayersText() <<
 		std::endl;
 }
 
@@ -101,6 +106,10 @@ int chkparams(){
 		std::cerr << "RandomLayer required but missing" << std::endl;
 		return 1;
 	}
+	if(pl.empty()){
+		std::cerr << "PhiLayer required but missing" << std::endl;
+		return 1;
+	}
 	//Don't test for password. It can be empty
 	return 0;
 }
@@ -121,6 +130,7 @@ int parse_args(int argc, char **argv)
 		  {"fullhash",		required_argument, 	0, 'u'},
 		  {"fasthash",		required_argument, 	0, 'f'},
 		  {"random_layer",	required_argument, 	0, 'r'},
+		  {"phi_layer",		required_argument, 	0, 'h'},
 		  {"version_id",	required_argument, 	0, 'v'},
 		  {"password",		required_argument, 	0, 'p'},
 		  {"salt",			required_argument, 	0, 's'},
@@ -137,7 +147,7 @@ int parse_args(int argc, char **argv)
 		char* endptr = NULL; //for parsing numbers
 
 		//_only also recognizes long options that start with a single -
-		r = getopt_long_only(argc, argv, "a:g:u:f:r:v:p:s:d:l:m:c:o:", 
+		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:v:p:s:d:l:m:c:o:", 
 			long_options, NULL);
 
 		/* Detect the end of the options. */
@@ -165,6 +175,10 @@ int parse_args(int argc, char **argv)
 			case 'r':
 				rl = optarg;
 				if(rl.empty()){invalid("RandomLayer"); return 1;}
+			  	break;
+			case 'h':
+				pl = optarg;
+				if(pl.empty()){invalid("PhiLayer"); return 1;}
 			  	break;
 			case 'v':
 				vid = optarg;
@@ -235,7 +249,7 @@ int main(int argc, char **argv)
 	try
 	{
 		Catena c = CatenaFactory::instance()
-			.create(alg, fuh, fah, rl, graph);
+			.create(alg, fuh, fah, rl, graph, pl);
 
 		//set defaults:
 		int pwdlen = pwd.length();

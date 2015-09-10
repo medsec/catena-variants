@@ -16,6 +16,7 @@ static std::string graph= "";
 static std::string fuh = "";
 static std::string fah = "";
 static std::string rl = "";
+static std::string pl = "";
 static int lambda = -1;
 static int mg = -1;
 static int g = -1;
@@ -33,6 +34,7 @@ void print_usage(char **argv){
 		"\t-f, --fasthash FASTH\thash function used for consecutive calls\n" <<
 			"\t\t\t\t(formal: H')\n" <<
 		"\t-r, --random_layer RL\tfirst layer(formal: Gamma)\n" <<
+		"\t-h, --phi_layer PL\textra layer(formal: Phi)\n" <<
 		"\t-i, --iterations I\tnumber of iterations used to determine the \n"<< 
 			"\t\t\t\truntime. Higher values increase stability\n" <<
 		"\t-l, --lambda L\t\ttime cost. Default depends on graph\n"<<
@@ -50,6 +52,8 @@ void print_usage(char **argv){
 		CatenaFactory::instance().getFastHashesText() <<
 		"RandomLayers - possible values for RL:\n" <<
 		CatenaFactory::instance().getRandomLayersText() <<
+		"PhiLayers - possible values for PL:\n" <<
+		CatenaFactory::instance().getPhiLayersText() <<
 		std::endl;
 }
 
@@ -87,6 +91,10 @@ int chkparams(){
 		std::cerr << "RandomLayer required but missing" << std::endl;
 		return 1;
 	}
+	if(pl.empty()){
+		std::cerr << "PhiLayer required but missing" << std::endl;
+		return 1;
+	}
 	if(iterations < 1){
 		std::cerr << "Iterations required but missing" << std::endl;
 		return 1;
@@ -111,6 +119,7 @@ int parse_args(int argc, char **argv)
 		  {"fullhash",		required_argument, 	0, 'u'},
 		  {"fasthash",		required_argument, 	0, 'f'},
 		  {"random_layer",	required_argument, 	0, 'r'},
+		  {"phi_layer",		required_argument, 	0, 'h'},
 		  {"lambda",		required_argument, 	0, 'l'},
 		  {"min_garlic",	required_argument, 	0, 'm'},
 		  {"garlic",		required_argument, 	0, 'c'},
@@ -123,7 +132,7 @@ int parse_args(int argc, char **argv)
 		char* endptr = NULL; //for parsing numbers
 
 		//_only also recognizes long options that start with a single -
-		r = getopt_long_only(argc, argv, "a:g:u:f:r:v:p:s:d:l:m:c:o:", 
+		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:v:p:s:d:l:m:c:o:", 
 			long_options, NULL);
 
 		/* Detect the end of the options. */
@@ -151,6 +160,10 @@ int parse_args(int argc, char **argv)
 			case 'r':
 				rl = optarg;
 				if(rl.empty()){invalid("RandomLayer"); return 1;}
+			  	break;
+			case 'h':
+				pl = optarg;
+				if(pl.empty()){invalid("PhiLayer"); return 1;}
 			  	break;
 			case 'l':
 			  	lambda = strtod(optarg, &endptr);
@@ -232,7 +245,7 @@ int main(int argc, char **argv)
 	try
 	{
 		Catena c = CatenaFactory::instance()
-			.create(alg, fuh, fah, rl, graph);
+			.create(alg, fuh, fah, rl, graph, pl);
 
 		if(lambda < 0){
 			lambda = c.getDefaultLambda();

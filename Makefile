@@ -36,7 +36,7 @@ LDFLAGS += -L$(HDIR)
 
 BASEFILES := src/catena-helpers.cpp src/catena.cpp src/catenafactory.cpp
 
-MODULES   := algorithms random_layers graphs hashes
+MODULES   := algorithms random_layers graphs hashes phi
 SRC_DIR   := $(addprefix src/,$(MODULES))
 OBJS_DIR  := $(addprefix objs/,$(MODULES))
 

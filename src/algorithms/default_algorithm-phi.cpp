@@ -45,7 +45,8 @@ DefaultAlgorithmPhi::flap(const uint8_t* x, const uint16_t xlen, const uint8_t l
 	_graph->process(x, lambda, garlic, salt, saltlen, r, h);
 
 	/*Phi-Function*/
-	Phi(r, h, garlic);
+	//Phi(r, h, garlic);
+	_philayer->process(garlic,r, h);
 
 	/*Clean up*/
 	free(r);

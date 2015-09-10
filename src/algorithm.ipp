@@ -41,6 +41,12 @@ Algorithm<Derived>::setRandomLayer(ARLsptr r){
 }
 
 template <typename Derived>
+void 
+Algorithm<Derived>::setPhiLayer(APLsptr p){
+	_philayer = p;
+}
+
+template <typename Derived>
 const uint8_t* 
 Algorithm<Derived>::getDefaultVersionID() const
 {

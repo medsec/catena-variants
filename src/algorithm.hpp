@@ -6,6 +6,7 @@
 #include "hashfull.hpp"
 #include "graph.hpp"
 #include "random_layer.hpp"
+#include "philayer.hpp"
 
 namespace Catena_Variants{
 
@@ -26,6 +27,7 @@ public:
 
 	virtual void setGraph(AGsptr g)=0;
 	virtual void setRandomLayer(ARLsptr r)=0;
+	virtual void setPhiLayer(APLsptr r)=0;
 
 	/*get Defaults from Graph*/
 	virtual const uint8_t* getDefaultVersionID() const=0;
@@ -56,6 +58,7 @@ public:
 
 	void setGraph(AGsptr g);
 	void setRandomLayer(ARLsptr r);
+	void setPhiLayer(APLsptr r);
 
 	/*get Defaults from Graph*/
 	const uint8_t* getDefaultVersionID() const;
@@ -70,7 +73,8 @@ protected:
 	AHFUsptr 		_hashfull;
 	AHFAsptr		_hashfast;
 	AGsptr			_graph;
-	ARLsptr	_randomlayer;
+	APLsptr			_philayer;
+	ARLsptr			_randomlayer;
 };
 
 #include "algorithm.ipp"

@@ -10,6 +10,7 @@
 #include "hashfast.hpp"
 #include "random_layer.hpp"
 #include "graph.hpp"
+#include "philayer.hpp"
 
 namespace Catena_Variants{
 
@@ -23,31 +24,35 @@ public:
 
 	Catena create(std::string const& alg, std::string const& hfull,
 		std::string const& hfast, std::string const& rlayer, 
-		std::string const& g);
+		std::string const& g, std::string const& player);
 
 	void addAlgorithm(AAsptr a);
 	void addHashFull(AHFUsptr h);
 	void addHashFast(AHFAsptr h);
 	void addRandomLayer(ARLsptr r);
 	void addGraph(AGsptr g);
+	void addPhiLayer(APLsptr g);
 
 	AAsptr getAlgorithm(std::string s);
 	AHFUsptr getHashFull(std::string s);
 	AHFAsptr getHashFast(std::string s);
 	ARLsptr getRandomLayer(std::string s);
 	AGsptr getGraph(std::string s);	
+	APLsptr getPhiLayer(std::string s);	
 
 	std::vector<AAsptr> getAlgorithms();
 	std::vector<AHFUsptr> getFullHashes();
 	std::vector<AHFAsptr> getFastHashes();
 	std::vector<ARLsptr> getRandomLayers();
 	std::vector<AGsptr> getGraphs();
+	std::vector<APLsptr> getPhiLayers();
 
 	std::string getAlgorithmsText();
 	std::string getFullHashesText();
 	std::string getFastHashesText();
 	std::string getRandomLayersText();
 	std::string getGraphsText();
+	std::string getPhiLayersText();
 
 private:
 //C'tors
@@ -75,6 +80,8 @@ private:
 	std::map<std::string, AGsptr> 		_Graphs;
 	std::stringstream 							_GraphsText;
 
+	std::map<std::string, APLsptr> _PhiLayers;
+	std::stringstream 							_PhiLayersText;
 };
 
 } //end namespace
