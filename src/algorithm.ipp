@@ -26,6 +26,9 @@ Algorithm<Derived>::setHashFast(AHFAsptr h){
 	if(_randomlayer){
 		_randomlayer->setHashFast(h);
 	}
+	if(_philayer){
+		_philayer->setHashFast(h);
+	}
 }
 
 template <typename Derived>
@@ -38,7 +41,7 @@ template <typename Derived>
 void 
 Algorithm<Derived>::setRandomLayer(ARLsptr r){
 	_randomlayer = r;
-}
+}			
 
 template <typename Derived>
 void 

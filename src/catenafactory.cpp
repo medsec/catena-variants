@@ -64,11 +64,11 @@ CatenaFactory::create(std::string const& alg, std::string const& hfull,
 	catch (const std::out_of_range& oor) {
 		throw NotFoundException("PhiLayer", player);
 	}
-
+	p->setHashFast(hfa);
 	//set up algorithm
+	a->setPhiLayer(p);
 	a->setRandomLayer(r);
 	a->setGraph(g);
-	a->setPhiLayer(p);
 	//Hash function for Random Layer and Graph are forwarded by the Algorithm
 	a->setFullHash(hfu);
 	a->setHashFast(hfa);
