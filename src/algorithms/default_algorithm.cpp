@@ -38,6 +38,9 @@ DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const uint8_t lamb
 		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
 
+	
+
+
 	/*Gamma Function => RandomLayer*/
 	_randomlayer->process(x, lambda, garlic, salt, saltlen, r);
 

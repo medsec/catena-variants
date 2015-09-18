@@ -4,6 +4,7 @@
 
 #include "hashfast.hpp"
 #include "hashfull.hpp"
+#include "graph.hpp"
 
 namespace Catena_Variants{
 
@@ -19,6 +20,8 @@ public:
 	
 	virtual void setFullHash(AHFUsptr h)=0;
 	virtual void setHashFast(AHFAsptr h)=0;
+	virtual void setGraph(AGsptr g)=0;
+
 
 };
 
@@ -37,10 +40,13 @@ public:
 
 	void setFullHash(AHFUsptr h);
 	void setHashFast(AHFAsptr h);
+	void setGraph(AGsptr g);
+
 
 protected:
 	AHFUsptr 	_hashfull;
 	AHFAsptr	_hashfast;
+	AGsptr		_graph;
 };
 
 #include "random_layer.ipp"

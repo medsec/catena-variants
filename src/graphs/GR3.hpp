@@ -11,6 +11,7 @@ public:
 	virtual void process(const uint8_t x[H_LEN], const uint8_t lambda, 
 						const uint8_t garlic, const uint8_t *salt, 
 						const uint8_t saltlen, uint8_t *r, uint8_t* h);
+	virtual uint64_t index(const uint64_t ind, uint8_t garlic);
 
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const;
 

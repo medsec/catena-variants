@@ -27,7 +27,7 @@ GR2::process(const uint8_t x[H_LEN], const uint8_t lambda,
 
 	/* naive implementation that used 2* 2^g memory */
 
-	for (k = 0; k < lambda; k++) {
+	//for (k = 0; k < lambda; k++) {
 		//_hashfull->Hash2(r + (c-1)*H_LEN, H_LEN, r, H_LEN, r+(c*H_LEN));
 		H_First(r + (c-1)*H_LEN_FAST, r, r);
 		_hashfast->ResetState();
@@ -37,10 +37,15 @@ GR2::process(const uint8_t x[H_LEN], const uint8_t lambda,
 				r+((c+i)*H_LEN_FAST));
 		}
 		memcpy(r, r+(c*H_LEN_FAST), c*H_LEN_FAST); // v <- r
-	}
+	//}
 
 	/* reverse(c - 1, garlic) == c - 1 */
 	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
+}
+
+uint64_t
+GR2::index(const uint64_t ind, uint8_t garlic){
+	return ind;
 }
 #pragma GCC diagnostic pop
 

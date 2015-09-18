@@ -64,7 +64,11 @@ CatenaFactory::create(std::string const& alg, std::string const& hfull,
 	catch (const std::out_of_range& oor) {
 		throw NotFoundException("PhiLayer", player);
 	}
+	//set up graph for indexing
 	p->setHashFast(hfa);
+	p->setGraph(g);
+	r->setGraph(g);
+	
 	//set up algorithm
 	a->setPhiLayer(p);
 	a->setRandomLayer(r);

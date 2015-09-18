@@ -20,6 +20,8 @@ public:
 					const uint8_t garlic, const uint8_t *salt, 
 					const uint8_t saltlen, uint8_t *r, uint8_t* h)=0;
 
+	virtual uint64_t index(const uint64_t ind, uint8_t garlic)=0;
+
 	/*Returns the required memory in byte*/
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const = 0;
 

@@ -19,6 +19,9 @@ DefaultAlgorithmPhi::flap(const uint8_t* x, const uint16_t xlen, const uint8_t l
 	const uint8_t garlic, const uint8_t *salt, const uint8_t saltlen, 
 	uint8_t* h)
 {
+	const std::string structure = "ggrg";
+	const bool phi = true;
+
 	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	const uint64_t c = UINT64_C(1) << garlic;
 	/* allocate memory for all further steps */
@@ -38,15 +41,27 @@ DefaultAlgorithmPhi::flap(const uint8_t* x, const uint16_t xlen, const uint8_t l
 		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
 
-	/*Gamma Function => RandomLayer*/
-	_randomlayer->process(x, lambda, garlic, salt, saltlen, r);
+	for(int i = 0; i<structure.length(); i++) {
+    	switch(structure[i]){
+    		case 'g':
+    		{
+    			/*F function => Graph*/
+				_graph->process(x, lambda, garlic, salt, saltlen, r, h);
+				break;
+    		}
+    		case 'r':
+    		{
+    			/*Gamma Function => RandomLayer*/
+				_randomlayer->process(x, lambda, garlic, salt, saltlen, r);
+				break;
+    		}
+    	}
+	}
 
-	/*F function => Graph*/
-	_graph->process(x, lambda, garlic, salt, saltlen, r, h);
-
-	/*Phi-Function*/
-	//Phi(r, h, garlic);
-	_philayer->process(garlic,r, h);
+	if(phi){
+		/*Phi-Function*/
+		_philayer->process(garlic,r, h);	
+	}
 
 	/*Clean up*/
 	free(r);

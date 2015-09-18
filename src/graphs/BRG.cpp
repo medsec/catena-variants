@@ -25,22 +25,22 @@ BRG::process(const uint8_t x[H_LEN], const uint8_t lambda,
 	uint64_t i;
 	uint8_t k;
 
+	uint8_t *previousR, *p;
+
 	/* BRH */
-	for (k = 0; k < lambda; k++) {
+	if(currentLambda % 2 == 0){
 		H_First(r + (c-1)*H_LEN_FAST, r, r);
 		_hashfast->ResetState();
 
 		/* Replace r[reverse(i, garlic)] with new value */
-		uint8_t *previousR = r, *p;
+		previousR = r;
 		for (i = 1; i < c; i++) {
 			p = r + reverse(i, garlic) * H_LEN_FAST;
 			_hashfast->Hash(i, previousR, p, p);
 			previousR = p;
 		}
-		k++;
-		if (k >= lambda) {
-			break;
-		}
+	}
+	else{
 		/* This is now sequential because (reverse(reverse(i, garlic), garlic) == i) */
 		//_hashfull->Hash2(r + (c-1)*H_LEN, H_LEN, r, H_LEN, r);
 		H_First(r + (c-1)*H_LEN_FAST, r, r);
@@ -51,10 +51,18 @@ BRG::process(const uint8_t x[H_LEN], const uint8_t lambda,
 		}
 	}
 
+	currentLambda += 1;
+
 	/* reverse(c - 1, garlic) == c - 1 */
 	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
 }
 #pragma GCC diagnostic pop
+
+uint64_t
+BRG::index(const uint64_t ind, uint8_t garlic){
+	if (currentLambda % 2 == 0) return ind;
+	else return reverse(ind, garlic);
+}
 
 uint64_t 
 BRG::reverse(uint64_t x, const uint8_t n){

@@ -34,7 +34,7 @@ Gamma::process(const uint8_t* x, const uint8_t lambda,
 		j = xorshift1024star() >> (64 - garlic);
 		j2 = xorshift1024star() >> (64 - garlic);
 		//v_j1= H'(v_j1||v_j2)
-		_hashfast->Hash(i, r + j * H_LEN_FAST, r + j2 * H_LEN_FAST, r + j * H_LEN_FAST); 
+		_hashfast->Hash(i, r + _graph->index(j, garlic) * H_LEN_FAST, r + _graph->index(j2, garlic) * H_LEN_FAST, r + _graph->index(j, garlic) * H_LEN_FAST); 
 	}
 
 	free(tmp);

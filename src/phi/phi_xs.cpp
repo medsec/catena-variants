@@ -24,21 +24,21 @@ Phi_XS::process(const uint8_t garlic, uint8_t *r, uint8_t* h)
 	uint8_t *tmp = (uint8_t*) malloc(H_LEN_FAST);
 	uint8_t *tmp2 = (uint8_t*) malloc(H_LEN_FAST);
 
-	_hashfast->Hash(0, (r+H_LEN_FAST*(c-1)), (r+H_LEN_FAST*(c-2)),tmp);  
-	_hashfast->Hash(0, (r+H_LEN_FAST*(c-3)), (r+H_LEN_FAST*(c-4)),tmp2);
+	_hashfast->Hash(0, (r+H_LEN_FAST*_graph->index(c-1, garlic)), (r+H_LEN_FAST*_graph->index(c-2, garlic)),tmp);  
+	_hashfast->Hash(0, (r+H_LEN_FAST*_graph->index(c-3, garlic)), (r+H_LEN_FAST*_graph->index(c-4, garlic)),tmp2);
 	initXSState(tmp, tmp2);
 	_hashfast->ResetState();
 
 	j = xorshift1024star() >> (64 - garlic);
-	_hashfast->Hash(0, r+H_LEN_FAST*(c-1), r + j * H_LEN_FAST, r); 
+	_hashfast->Hash(0, r+H_LEN_FAST*_graph->index(c-1, garlic), r + _graph->index(j, garlic) * H_LEN_FAST, r+_graph->index(0,garlic)); 
 
 	for(i = 1; i < c; i++){
 		j = xorshift1024star() >> (64 - garlic);
-		_hashfast->Hash(i, r + (i-1) * H_LEN_FAST, r + j* H_LEN_FAST, r + i * H_LEN_FAST); 
+		_hashfast->Hash(i, r + _graph->index(i-1, garlic) * H_LEN_FAST, r + _graph->index(j, garlic)* H_LEN_FAST, r + _graph->index(i, garlic) * H_LEN_FAST); 
 	}
 	//p_old???
 
-	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
+	memcpy(h, r + _graph->index(c - 1, garlic) * H_LEN_FAST, H_LEN_FAST);
 }
 
 

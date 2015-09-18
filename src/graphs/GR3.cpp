@@ -42,6 +42,11 @@ GR3::process(const uint8_t x[H_LEN], const uint8_t lambda,
 	/* reverse(c - 1, garlic) == c - 1 */
 	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
 }
+
+uint64_t
+GR3::index(const uint64_t ind, uint8_t garlic){
+	return ind;
+}
 #pragma GCC diagnostic pop
 
 uint64_t

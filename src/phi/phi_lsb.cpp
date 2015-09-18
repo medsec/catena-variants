@@ -22,11 +22,11 @@ Phi_Lsb::process(const uint8_t garlic, uint8_t *r, uint8_t* h)
 	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	uint64_t i;
 
-	_hashfast->Hash(0, r, r+R((uint64_t*)(r+H_LEN_FAST*(c-1)), garlic)*H_LEN_FAST, r);
-	uint8_t * p = r;
+	_hashfast->Hash(0, r + _graph->index(0, garlic), r + _graph->index(R((uint64_t*)(r+H_LEN_FAST*(c-1)), garlic), garlic)*H_LEN_FAST, r + _graph->index(0, garlic));
+	uint8_t * p = r + _graph->index(0, garlic);
 	uint8_t * p_old = p;
-	p += H_LEN_FAST;
-	for (i = 1; i < c; i++, p += H_LEN_FAST) {
+	for (i = 1; i < c; i++/*, p += H_LEN_FAST*/) {
+			p = r+i*(H_LEN_FAST);
 			_hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p_old, p);
 			p_old=p;
 		}

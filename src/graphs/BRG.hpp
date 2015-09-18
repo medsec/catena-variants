@@ -12,6 +12,8 @@ public:
 						const uint8_t garlic, const uint8_t *salt, 
 						const uint8_t saltlen, uint8_t *r, uint8_t* h);
 
+	virtual uint64_t index(const uint64_t ind, uint8_t garlic);
+
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const;
 
 	virtual uint8_t getDefaultLambda()const;
@@ -30,6 +32,8 @@ private:
 	uint8_t const LAMBDA = 2;
 	uint8_t const GARLIC = 21;
 	uint8_t const MIN_GARLIC = 21;
+
+	uint8_t currentLambda = 0;
 };
 
 } //end namespace
