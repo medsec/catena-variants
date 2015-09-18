@@ -16,7 +16,7 @@ BRG::BRG()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-BRG::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+BRG::process(const uint8_t x[H_LEN], const std::string structure, 
 			const uint8_t garlic, const uint8_t *salt, 
 			const uint8_t saltlen, uint8_t *r, uint8_t* h)
 {
@@ -85,9 +85,9 @@ BRG::getMemoryRequirement(uint8_t garlic)const
 }
 
 
-uint8_t
-BRG::getDefaultLambda()const{
-	return LAMBDA;
+std::string
+BRG::getDefaultStructure()const{
+	return STRUCTURE;
 }
 
 

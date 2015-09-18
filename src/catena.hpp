@@ -25,7 +25,7 @@ public:
 	void setVersionID(const uint8_t* v);
 
 	/* get default values from graph */
-	uint8_t getDefaultLambda() const;
+	std::string getDefaultStructure() const;
  	uint8_t getDefaultGarlic() const;
  	uint8_t getDefaulMinGarlic() const;
 	const uint8_t* getDefaultVersionID() const;
@@ -35,7 +35,7 @@ public:
 	void Default(uint8_t *pwd,   const uint32_t pwdlen,
 		   const uint8_t *salt,  const uint8_t  saltlen,
 		   const uint8_t *data,  const uint32_t datalen,
-		   const uint8_t lambda, const uint8_t  min_garlic,
+		   const std::string structure, const uint8_t  min_garlic,
 		   const uint8_t garlic, const uint8_t hashlen,  uint8_t *hash);
 
 
@@ -58,7 +58,7 @@ public:
 	void Client(uint8_t *pwd,   const uint32_t pwdlen,
 			  const uint8_t *salt,  const uint8_t  saltlen,
 			  const uint8_t *data,  const uint32_t datalen,
-			  const uint8_t lambda, const uint8_t  min_garlic,
+			  const std::string structure, const uint8_t  min_garlic,
 			  const uint8_t garlic, const uint8_t  hashlen,
 			  uint8_t x[H_LEN]);
 
@@ -79,7 +79,7 @@ public:
 			const uint8_t hashlen, uint8_t *chash);
 
 	/* Client independent update form an old hash */
-	void CI_Update(const uint8_t *old_hash,  const uint8_t lambda,
+	void CI_Update(const uint8_t *old_hash,  const std::string structure,
 			   const uint8_t *salt,  const uint8_t saltlen,
 		       const uint8_t old_garlic, const uint8_t new_garlic,
 		       const uint8_t hashlen, uint8_t *new_hash);
@@ -89,7 +89,7 @@ public:
 	void KeyGeneration(uint8_t *pwd,   const uint32_t pwdlen,
 		       const uint8_t *salt,  const uint8_t saltlen,
 		       const uint8_t *data,  const uint32_t datalen,
-		       const uint8_t lambda, const uint8_t  min_garlic,
+		       const std::string structure, const uint8_t  min_garlic,
 		       const uint8_t garlic, uint32_t keylen,
 		       const uint8_t key_id, uint8_t *key);
 
@@ -99,7 +99,7 @@ public:
 	void KeyedHashing(uint8_t *pwd,   const uint32_t pwdlen,
 				  const uint8_t *salt,  const uint8_t  saltlen,
 				  const uint8_t *data,  const uint32_t datalen,
-				  const uint8_t lambda, const uint8_t  min_garlic,
+				  const std::string structure, const uint8_t  min_garlic,
 				  const uint8_t garlic, const uint8_t  hashlen,
 				  const uint8_t *key,   const uint64_t uuid,
 				  uint8_t *chash);
@@ -109,7 +109,7 @@ private:
 	void _Catena(uint8_t *pwd,   const uint32_t pwdlen,
 	     const uint8_t *salt,  const uint8_t  saltlen,
 	     const uint8_t *data,  const uint32_t datalen,
-	     const uint8_t lambda, const uint8_t  min_garlic,
+	     const std::string structure, const uint8_t  min_garlic,
 	     const uint8_t garlic, const size_t  hashlen,
 	     const uint8_t client, const uint8_t  tweak_id, uint8_t *hash);
 

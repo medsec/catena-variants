@@ -16,7 +16,7 @@ GR2::GR2()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-GR2::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+GR2::process(const uint8_t x[H_LEN], const std::string structure, 
 			const uint8_t garlic, const uint8_t *salt, 
 			const uint8_t saltlen, uint8_t *r, uint8_t* h)
 {
@@ -81,9 +81,9 @@ GR2::getMemoryRequirement(uint8_t garlic)const
 }
 
 
-uint8_t
-GR2::getDefaultLambda()const{
-	return LAMBDA;
+std::string
+GR2::getDefaultStructure()const{
+  return STRUCTURE;
 }
 
 

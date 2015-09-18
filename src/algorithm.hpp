@@ -17,7 +17,7 @@ public:
 	virtual ~AbstractAlgorithm() = default;
 	virtual AbstractAlgorithm* clone() const =0;
 
-	virtual void flap(const uint8_t* x, const uint16_t xlen, const uint8_t lambda, 
+	virtual void flap(const uint8_t* x, const uint16_t xlen, const std::string structure, 
 		const uint8_t garlic, const uint8_t *salt, const uint8_t saltlen, 
 		uint8_t* h)=0;
 
@@ -31,7 +31,7 @@ public:
 
 	/*get Defaults from Graph*/
 	virtual const uint8_t* getDefaultVersionID() const=0;
-	virtual uint8_t getDefaultLambda()const=0;
+	virtual std::string getDefaultStructure()const=0;
  	virtual uint8_t getDefaultGarlic()const=0;
  	virtual uint8_t getDefaulMinGarlic()const=0;
 
@@ -62,7 +62,7 @@ public:
 
 	/*get Defaults from Graph*/
 	const uint8_t* getDefaultVersionID() const;
-	uint8_t getDefaultLambda()const;
+	std::string getDefaultStructure()const;
  	uint8_t getDefaultGarlic()const;
  	uint8_t getDefaulMinGarlic()const;
 

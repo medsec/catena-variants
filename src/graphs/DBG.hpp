@@ -9,7 +9,7 @@ class DBG :  public Graph<DBG>
 public:	
 	DBG();
 
-	virtual void process(const uint8_t x[H_LEN], const uint8_t lambda, 
+	virtual void process(const uint8_t x[H_LEN], const std::string structure, 
 						const uint8_t garlic, const uint8_t *salt, 
 						const uint8_t saltlen, uint8_t *r, uint8_t* h);
 
@@ -17,7 +17,7 @@ public:
 
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const;
 
-	virtual uint8_t getDefaultLambda()const;
+	virtual std::string getDefaultStructure()const;
  	virtual uint8_t getDefaultGarlic()const;
  	virtual uint8_t getDefaulMinGarlic()const;
 	virtual const uint8_t* getDefaultVersionID()const;
@@ -36,7 +36,7 @@ private:
 	uint64_t idx(uint64_t i, uint64_t j, uint64_t c, uint64_t m);
 
 	std::string const VERSION_ID = "Butterfly";
-	uint8_t const LAMBDA = 4;
+	std::string const STRUCTURE = "gggrg";
 	uint8_t const GARLIC = 16;
 	uint8_t const MIN_GARLIC = 16;
 	uint8_t co = 0;

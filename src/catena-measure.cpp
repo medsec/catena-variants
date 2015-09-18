@@ -17,7 +17,7 @@ static std::string fuh = "";
 static std::string fah = "";
 static std::string rl = "";
 static std::string pl = "";
-static int lambda = -1;
+static std::string stru = "";
 static int mg = -1;
 static int g = -1;
 static int iterations = -1;
@@ -37,7 +37,7 @@ void print_usage(char **argv){
 		"\t-h, --phi_layer PL\textra layer(formal: Phi)\n" <<
 		"\t-i, --iterations I\tnumber of iterations used to determine the \n"<< 
 			"\t\t\t\truntime. Higher values increase stability\n" <<
-		"\t-l, --lambda L\t\ttime cost. Default depends on graph\n"<<
+		"\t-t, --structure L\t\tGraph structure. Default depends on graph\n"<<
 		"\t-m, --min_garlic MG\tLower memory cost(formal: g0). Default\n"<<
 			"\t\t\t\tdepends on graph\n"
 		"\t-c, --garlic G\t\tmemory cost(formal:g). Default depends on graph"<<
@@ -58,10 +58,6 @@ void print_usage(char **argv){
 }
 
 int chkparams(){
-	if(lambda > 255){
-		std::cerr << "Lambda to large. Limit is 255" << std::endl;
-		return 1;
-	}
 	if(mg > 63){
 		std::cerr << "MinGarlic to large. Limit is 63" << std::endl;
 		return 1;
@@ -120,7 +116,7 @@ int parse_args(int argc, char **argv)
 		  {"fasthash",		required_argument, 	0, 'f'},
 		  {"random_layer",	required_argument, 	0, 'r'},
 		  {"phi_layer",		required_argument, 	0, 'h'},
-		  {"lambda",		required_argument, 	0, 'l'},
+		  {"structure",		required_argument, 	0, 't'},
 		  {"min_garlic",	required_argument, 	0, 'm'},
 		  {"garlic",		required_argument, 	0, 'c'},
 		  {"iterations",	required_argument, 	0, 'i'},
@@ -165,9 +161,9 @@ int parse_args(int argc, char **argv)
 				pl = optarg;
 				if(pl.empty()){invalid("PhiLayer"); return 1;}
 			  	break;
-			case 'l':
-			  	lambda = strtod(optarg, &endptr);
-			  	if (*endptr != '\0' || lambda < 1){invalid("Lambda"); return 1;}
+			case 't':
+				stru = optarg;
+				//accept empty structure
 			  	break;
 			case 'm':
 			  	mg = strtod(optarg, &endptr);
@@ -224,7 +220,7 @@ double measure(Catena c){
 	for(int i = 0; i < iterations; i++){
 		diff = clock();
 		c.Default(pwd, pwdlen, (const uint8_t*)salt, saltlen, 
-			(const uint8_t*) data, datalen, lambda, mg, g,
+			(const uint8_t*) data, datalen, stru, mg, g,
 		 	H_LEN, hash1);
 		diff = clock() - diff;
 		t[i] = ((double)diff) / CLOCKS_PER_SEC;
@@ -247,8 +243,8 @@ int main(int argc, char **argv)
 		Catena c = CatenaFactory::instance()
 			.create(alg, fuh, fah, rl, graph, pl);
 
-		if(lambda < 0){
-			lambda = c.getDefaultLambda();
+		if(stru ==""){
+			stru = c.getDefaultStructure();
 		}
 		if(mg < 0){
 			mg = c.getDefaulMinGarlic();

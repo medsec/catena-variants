@@ -16,7 +16,7 @@ GR3::GR3()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-GR3::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+GR3::process(const uint8_t x[H_LEN], const std::string structure, 
 			const uint8_t garlic, const uint8_t *salt, 
 			const uint8_t saltlen, uint8_t *r, uint8_t* h)
 {
@@ -27,7 +27,7 @@ GR3::process(const uint8_t x[H_LEN], const uint8_t lambda,
 
 	/* naive implementation that used 2* 2^g memory */
 
-	for (k = 0; k < lambda; k++) {
+	//for (k = 0; k < lambda; k++) {
 		//_hashfull->Hash2(r + (c-1)*H_LEN, H_LEN, r, H_LEN, r+(c*H_LEN));
 		H_First(r + (c-1)*H_LEN_FAST, r, r);
 		_hashfast->ResetState();
@@ -37,7 +37,7 @@ GR3::process(const uint8_t x[H_LEN], const uint8_t lambda,
 				r+((c+i)*H_LEN_FAST));
 		}
 		memcpy(r, r+(c*H_LEN_FAST), c*H_LEN_FAST); // v <- r
-	}
+	//}
 
 	/* reverse(c - 1, garlic) == c - 1 */
 	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
@@ -81,9 +81,9 @@ GR3::getMemoryRequirement(uint8_t garlic)const
 }
 
 
-uint8_t
-GR3::getDefaultLambda()const{
-	return LAMBDA;
+std::string
+GR3::getDefaultStructure()const{
+	return STRUCTURE;
 }
 
 

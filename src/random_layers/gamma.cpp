@@ -15,7 +15,7 @@ Gamma::Gamma()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-Gamma::process(const uint8_t* x, const uint8_t lambda, 
+Gamma::process(const uint8_t* x, const std::string structure, 
 			  	const uint8_t garlic, const uint8_t *salt, 
                	const uint8_t saltlen, uint8_t *r)
 {

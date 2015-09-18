@@ -14,7 +14,7 @@ public:
 	virtual ~AbstractRandomLayer() = default;
 	virtual AbstractRandomLayer* clone() const=0;
 	
-	virtual void process(const uint8_t* x, const uint8_t lambda, 
+	virtual void process(const uint8_t* x, const std::string structure, 
 					const uint8_t garlic, const uint8_t *salt, 
               		const uint8_t saltlen, uint8_t *r)=0;
 	

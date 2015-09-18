@@ -14,7 +14,7 @@ DBG::DBG()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-DBG::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+DBG::process(const uint8_t x[H_LEN], const std::string structure, 
 						const uint8_t garlic, const uint8_t *salt, 
 						const uint8_t saltlen, uint8_t *r, uint8_t* h)
 {
@@ -103,9 +103,9 @@ DBG::getMemoryRequirement(uint8_t garlic)const
 }
 
 
-uint8_t
-DBG::getDefaultLambda()const{
-	return LAMBDA;
+std::string
+DBG::getDefaultStructure()const{
+  return STRUCTURE;
 }
 
 

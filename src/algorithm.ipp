@@ -58,10 +58,10 @@ Algorithm<Derived>::getDefaultVersionID() const
 
 
 template <typename Derived>
-uint8_t 
-Algorithm<Derived>::getDefaultLambda()const
+std::string 
+Algorithm<Derived>::getDefaultStructure()const
 {
-	return _graph->getDefaultLambda();
+	return _graph->getDefaultStructure();
 }
 
 template <typename Derived>

@@ -15,7 +15,7 @@ DefaultAlgorithm::DefaultAlgorithm()
 }
 
 void
-DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const uint8_t lambda, 
+DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const std::string structure, 
 	const uint8_t garlic, const uint8_t *salt, const uint8_t saltlen, 
 	uint8_t* h)
 {
@@ -38,14 +38,11 @@ DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const uint8_t lamb
 		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
 
-	
-
-
 	/*Gamma Function => RandomLayer*/
-	_randomlayer->process(x, lambda, garlic, salt, saltlen, r);
+	_randomlayer->process(x, structure, garlic, salt, saltlen, r);
 
 	/*F function => Graph*/
-	_graph->process(x, lambda, garlic, salt, saltlen, r, h);
+	_graph->process(x, structure, garlic, salt, saltlen, r, h);
 
 	/*Clean up*/
 	free(r);
