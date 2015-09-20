@@ -46,7 +46,7 @@ void print_usage(char **argv){
 		"\t-s, --salt SALT\t\tthe salt(formal: s) in hex. 2 characters per\n" <<
 		"\t\t\t\tbyte. Empty by default\n" <<
 		"\t-d, --data DATA\t\tAssociated data(formal: d). Empty by default\n" <<
-		"\t-t, --structure L\t\tGraph structure. Default depends on graph\n"<<
+		"\t-t, --structure L\tGraph structure (r - random, g - graph). Default depends on graph\n"<<
 		"\t-m, --min_garlic MG\tLower memory cost(formal: g0). Default\n"<<
 		"\t\t\t\tdepends on graph\n"
 		"\t-c, --garlic G\t\tmemory cost(formal:g). Default depends on graph\n"<<
@@ -144,7 +144,7 @@ int parse_args(int argc, char **argv)
 		char* endptr = NULL; //for parsing numbers
 
 		//_only also recognizes long options that start with a single -
-		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:v:p:s:d:l:m:c:o:", 
+		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:v:p:s:d:t:l:m:c:o:", 
 			long_options, NULL);
 
 		/* Detect the end of the options. */

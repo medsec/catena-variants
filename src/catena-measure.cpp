@@ -37,7 +37,7 @@ void print_usage(char **argv){
 		"\t-h, --phi_layer PL\textra layer(formal: Phi)\n" <<
 		"\t-i, --iterations I\tnumber of iterations used to determine the \n"<< 
 			"\t\t\t\truntime. Higher values increase stability\n" <<
-		"\t-t, --structure L\t\tGraph structure. Default depends on graph\n"<<
+		"\t-t, --structure T\tGraph structure (r - random, g - graph). Default depends on graph\n"<<
 		"\t-m, --min_garlic MG\tLower memory cost(formal: g0). Default\n"<<
 			"\t\t\t\tdepends on graph\n"
 		"\t-c, --garlic G\t\tmemory cost(formal:g). Default depends on graph"<<
@@ -128,7 +128,7 @@ int parse_args(int argc, char **argv)
 		char* endptr = NULL; //for parsing numbers
 
 		//_only also recognizes long options that start with a single -
-		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:v:p:s:d:l:m:c:o:", 
+		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:t:v:p:s:d:l:m:c:o:", 
 			long_options, NULL);
 
 		/* Detect the end of the options. */

@@ -6,7 +6,7 @@
 using namespace Catena_Variants;
 
 //Register the registrable with the Registry so it can be used by CatenaFactory
-Registry<DefaultAlgorithm> regDA;
+Registry<DefaultAlgorithm> regDAP;
 
 DefaultAlgorithm::DefaultAlgorithm()
 :Registerable("DefaultAlgorithm", "DA", "This is the flap function used in Catena")
@@ -38,17 +38,33 @@ DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const std::string 
 		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
 
-	/*Gamma Function => RandomLayer*/
-	_randomlayer->process(x, structure, garlic, salt, saltlen, r);
+	for(int i = 0; i<structure.length(); i++) {
+    	switch(structure[i]){
+    		case 'g':
+    		{
+    			/*F function => Graph*/
+				_graph->process(x, structure, garlic, salt, saltlen, r, h);
+				break;
+    		}
+    		case 'r':
+    		{
+    			/*Gamma Function => RandomLayer*/
+				_randomlayer->process(x, structure, garlic, salt, saltlen, r);
+				break;
+    		}
+    	}
+	}
 
-	/*F function => Graph*/
-	_graph->process(x, structure, garlic, salt, saltlen, r, h);
+	/*Phi-Function*/
+	_philayer->process(garlic,r, h);
 
 	/*Clean up*/
 	free(r);
 	free(vm2);
 	free(vm1);
 }
+
+
 
 void 
 DefaultAlgorithm::H_INIT(const uint8_t* x, const uint16_t xlen,  uint8_t *vm1, uint8_t *vm2){
