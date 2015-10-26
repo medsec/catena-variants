@@ -25,7 +25,6 @@ DBG::process(const uint8_t x[H_LEN], const std::string structure,
 
   uint8_t *tmp = (uint8_t*)malloc(H_LEN_FAST);
   uint64_t i,j;
-  uint8_t k;
   //uint8_t co = 0; //carry over from last iteration //co is set as member
 
   /* DBH */

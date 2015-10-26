@@ -23,7 +23,6 @@ GR2::process(const uint8_t x[H_LEN], const std::string structure,
 	const uint64_t c = UINT64_C(1) << garlic;
 	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	uint64_t i;
-	uint8_t k;
 
 	/* naive implementation that used 2* 2^g memory */
 
