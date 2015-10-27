@@ -38,7 +38,7 @@ DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const std::string 
 		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
 
-	for(int i = 0; i<structure.length(); i++) {
+	for(uint16_t i = 0; i<structure.length(); i++) {
     	switch(structure[i]){
     		case 'g':
     		{

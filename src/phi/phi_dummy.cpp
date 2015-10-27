@@ -20,6 +20,6 @@ Phi_Dummy::ResetState()
 void 
 Phi_Dummy::process(const uint8_t garlic, uint8_t *r, uint8_t* h)
 {
-	memcpy(h, r, _hashfast->getHlenFast());
+
 }
 #pragma GCC diagnostic pop
