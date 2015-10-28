@@ -46,7 +46,7 @@ RandomLayers (Gamma function):
 Graphs (F function):
 * Double-Butterfly
 * Bit-reversal
-* A combination of bit-reversal with ideas from Gray-code as suggested by Ben Harris
+* A combination of bit-reversal with ideas from Gray-code as suggested by Ben Harris (currently using 2 * 2^g memory instead of 2^g due to the naive implementation)
 
 
 Using Catena-Variants in your own applications
