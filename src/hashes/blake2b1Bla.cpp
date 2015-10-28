@@ -43,13 +43,13 @@ using namespace Catena_Variants;
 Registry<Blake2b1Bla> regB2b1Bla;
 
 Blake2b1Bla::Blake2b1Bla()
-:Registerable("Blake2b-1 Bla", "B2b1Bla", "Single round of Blake2b(SSE or reference)")
+:Registerable("Blake2b-1-Bla", "B2b1Bla", "Single round of Blake2b (SSE or reference) with Blamka")
 {
   _state = (blake2b_state*)aligned_alloc(64,sizeof(blake2b_state));
 }
 
 Blake2b1Bla::Blake2b1Bla(Blake2b1Bla const& other)
-:Registerable("Blake2b-1 Bla", "B2b1Bla", "Single round of Blake2b(SSE or reference)")
+:Registerable("Blake2b-1-Bla", "B2b1Bla", "Single round of Blake2b (SSE or reference) with Blamka")
 {
   _state = (blake2b_state*)aligned_alloc(64,sizeof(blake2b_state));
   memcpy(_state, other._state, sizeof(blake2b_state));
