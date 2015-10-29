@@ -35,8 +35,10 @@ DBG::process(const uint8_t x[H_LEN], const std::string structure,
       XOR(r + idx(i-1,c-1,c,m)*H_LEN_FAST, r + idx(i-1,0,c,m)*H_LEN_FAST, tmp, H_LEN_FAST);
 
       //r0 := H(tmp || vsigma(g,i-1,0) )
-      _hashfull->Hash2(tmp, H_LEN_FAST, r+idx(i-1,sigma(garlic,i-1,0),c,m) * H_LEN_FAST, H_LEN_FAST,
-	       r+idx(i,0,c,m) *H_LEN_FAST);
+      // _hashfull->Hash2(tmp, H_LEN_FAST, r+idx(i-1,sigma(garlic,i-1,0),c,m) * H_LEN_FAST, H_LEN_FAST,
+	     //   r+idx(i,0,c,m) *H_LEN_FAST);
+      H_First(tmp, r+idx(i-1,sigma(garlic,i-1,0),c,m) * H_LEN_FAST, r+idx(i,0,c,m) *H_LEN_FAST);
+
       _hashfast->ResetState();
 
       //vertices
@@ -67,6 +69,18 @@ DBG::sigma(const uint8_t g, const uint64_t i, const uint64_t j)
 	}
 }
 
+void 
+DBG::H_First(const uint8_t* i1, const uint8_t* i2, uint8_t* hash){
+  _hashfast->ResetState();
+  const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
+  uint8_t *x = (uint8_t*) malloc(H_LEN);
+  _hashfull->Hash2(i1, H_LEN_FAST, i2, H_LEN_FAST,x);
+
+  for(uint8_t i = 0; i<(H_LEN_FAST/H_LEN);++i){
+    _hashfull->Hash2(&i,1, x, H_LEN, hash+i*H_LEN);
+  }
+  free(x);
+}
 
 uint64_t 
 DBG::idx(uint64_t i, uint64_t j, uint64_t c, uint64_t m)
