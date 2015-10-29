@@ -12,12 +12,13 @@ static std::string graph= "";
 static std::string fuh = "";
 static std::string fah = "";
 static std::string rl = "";
+static std::string pl = "";
 static std::string vid = "";
 static std::string pwd = "";
 static uint8_t* salt = NULL;
 static int saltlen = 0;
 static std::string ad = "";
-static int lambda = -1;
+static std::string stru = "";
 static int mg = -1;
 static int g = -1;
 static int hashlen = -1;
@@ -26,6 +27,7 @@ void print_usage(char **argv){
 	std::cerr << "Usage: " << argv[0] <<" --algorithm ALG --graph GRAPH" <<
 		" --fullhash FULLH\n" <<
 		" --fasthash FASTH --random_layer RL [--version_id ID]"<< 
+		" --phi_layer PL "<< 
 		"--password PWD\n" <<
 		" [--salt SALT] [--data DATA] [--lambda L] [--min_garlic MG]" << 
 		" [--garlic G]\n" <<
@@ -37,13 +39,14 @@ void print_usage(char **argv){
 		"\t-f, --fasthash FASTH\thash function used for consecutive calls\n" <<
 		"\t\t\t\t(formal: H')\n" <<
 		"\t-r, --random_layer RL\tfirst layer(formal: Gamma)\n" <<
+		"\t-h, --phi_layer PL\textra layer(formal: Phi)\n" <<
 		"\t-v, --version_id ID\tVersion identifier(formal: V). Default depends\n" <<
 		"\t\t\t\ton graph\n"<<
 		"\t-p, --password PWD\tthe password(formal: pwd)\n" <<
 		"\t-s, --salt SALT\t\tthe salt(formal: s) in hex. 2 characters per\n" <<
 		"\t\t\t\tbyte. Empty by default\n" <<
 		"\t-d, --data DATA\t\tAssociated data(formal: d). Empty by default\n" <<
-		"\t-l, --lambda L\t\ttime cost. Default depends on graph\n"<<
+		"\t-t, --structure L\tGraph structure (r - random, g - graph). Default depends on graph\n"<<
 		"\t-m, --min_garlic MG\tLower memory cost(formal: g0). Default\n"<<
 		"\t\t\t\tdepends on graph\n"
 		"\t-c, --garlic G\t\tmemory cost(formal:g). Default depends on graph\n"<<
@@ -60,14 +63,12 @@ void print_usage(char **argv){
 		CatenaFactory::instance().getFastHashesText() <<
 		"RandomLayers - possible values for RL:\n" <<
 		CatenaFactory::instance().getRandomLayersText() <<
+		"PhiLayers - possible values for PL:\n" <<
+		CatenaFactory::instance().getPhiLayersText() <<
 		std::endl;
 }
 
 int chkparams(){
-	if(lambda > 255){
-		std::cerr << "Lambda to large. Limit is 255" << std::endl;
-		return 1;
-	}
 	if(mg > 63){
 		std::cerr << "MinGarlic to large. Limit is 63" << std::endl;
 		return 1;
@@ -101,6 +102,11 @@ int chkparams(){
 		std::cerr << "RandomLayer required but missing" << std::endl;
 		return 1;
 	}
+	if(pl.empty()){
+		std::cerr << "PhiLayer required but missing" << std::endl;
+		return 1;
+	}
+
 	//Don't test for password. It can be empty
 	return 0;
 }
@@ -121,11 +127,12 @@ int parse_args(int argc, char **argv)
 		  {"fullhash",		required_argument, 	0, 'u'},
 		  {"fasthash",		required_argument, 	0, 'f'},
 		  {"random_layer",	required_argument, 	0, 'r'},
+		  {"phi_layer",		required_argument, 	0, 'h'},
 		  {"version_id",	required_argument, 	0, 'v'},
 		  {"password",		required_argument, 	0, 'p'},
 		  {"salt",			required_argument, 	0, 's'},
 		  {"data",			required_argument, 	0, 'd'},
-		  {"lambda",		required_argument, 	0, 'l'},
+		  {"structure",		required_argument, 	0, 't'},
 		  {"min_garlic",	required_argument, 	0, 'm'},
 		  {"garlic",		required_argument, 	0, 'c'},
 		  {"hash_length",	required_argument, 	0, 'o'},
@@ -137,7 +144,7 @@ int parse_args(int argc, char **argv)
 		char* endptr = NULL; //for parsing numbers
 
 		//_only also recognizes long options that start with a single -
-		r = getopt_long_only(argc, argv, "a:g:u:f:r:v:p:s:d:l:m:c:o:", 
+		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:v:p:s:d:t:l:m:c:o:", 
 			long_options, NULL);
 
 		/* Detect the end of the options. */
@@ -166,6 +173,10 @@ int parse_args(int argc, char **argv)
 				rl = optarg;
 				if(rl.empty()){invalid("RandomLayer"); return 1;}
 			  	break;
+			case 'h':
+				pl = optarg;
+				if(pl.empty()){invalid("PhiLayer"); return 1;}
+			  	break;
 			case 'v':
 				vid = optarg;
 				if(vid.empty()){invalid("VersionID"); return 1;}
@@ -187,13 +198,13 @@ int parse_args(int argc, char **argv)
 				}
 				if(saltlen==0){invalid("Salt"); return 1;}
 			  	break;
+			case 't':
+				stru = optarg;
+				//accept empty structure
+			  	break;
 			case 'd':
 				ad = optarg;
 				if(ad.empty()){invalid("Data"); return 1;}
-			  	break;
-			case 'l':
-			  	lambda = strtod(optarg, &endptr);
-			  	if (*endptr != '\0' || lambda < 1){invalid("Lambda"); return 1;}
 			  	break;
 			case 'm':
 			  	mg = strtod(optarg, &endptr);
@@ -235,7 +246,7 @@ int main(int argc, char **argv)
 	try
 	{
 		Catena c = CatenaFactory::instance()
-			.create(alg, fuh, fah, rl, graph);
+			.create(alg, fuh, fah, rl, graph, pl);
 
 		//set defaults:
 		int pwdlen = pwd.length();
@@ -248,8 +259,8 @@ int main(int argc, char **argv)
 		uint8_t* data = new uint8_t[datalen];
 		strncpy((char*)data, ad.c_str(), datalen);
 		
-		if(lambda < 0){
-			lambda = c.getDefaultLambda();
+		if(stru ==""){
+			stru = c.getDefaultStructure();
 		}
 		if(mg < 0){
 			mg = c.getDefaulMinGarlic();
@@ -268,7 +279,7 @@ int main(int argc, char **argv)
 			c.setVersionID((const uint8_t*)vid.c_str());
 		}
 	  	
-	  	c.Default(pw, pwdlen ,salt, saltlen, data, datalen, lambda, mg, g,
+	  	c.Default(pw, pwdlen ,salt, saltlen, data, datalen, stru, mg, g,
 		 	hashlen, hash1);
 
 	  	//Output

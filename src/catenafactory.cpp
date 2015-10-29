@@ -15,7 +15,7 @@ CatenaFactory::instance()
 Catena 
 CatenaFactory::create(std::string const& alg, std::string const& hfull,
 		std::string const& hfast, std::string const& rlayer, 
-		std::string const& graph)
+		std::string const& graph, std::string const& player)
 {
 	Catena c;
 	AAsptr a;
@@ -23,6 +23,7 @@ CatenaFactory::create(std::string const& alg, std::string const& hfull,
 	AHFAsptr hfa;
 	ARLsptr r;
 	AGsptr g;
+	APLsptr p;
 
 	try {
 		a = std::shared_ptr<AbstractAlgorithm>(_Algorithms.at(alg)->clone());
@@ -56,8 +57,20 @@ CatenaFactory::create(std::string const& alg, std::string const& hfull,
 	catch (const std::out_of_range& oor) {
 		throw NotFoundException("Graph", graph);
 	}
-
+	try {
+		p = std::shared_ptr<AbstractPhiLayer>(
+				_PhiLayers.at(player)->clone());
+	}
+	catch (const std::out_of_range& oor) {
+		throw NotFoundException("PhiLayer", player);
+	}
+	//set up graph for indexing
+	p->setHashFast(hfa);
+	p->setGraph(g);
+	r->setGraph(g);
+	
 	//set up algorithm
+	a->setPhiLayer(p);
 	a->setRandomLayer(r);
 	a->setGraph(g);
 	//Hash function for Random Layer and Graph are forwarded by the Algorithm
@@ -132,6 +145,14 @@ CatenaFactory::addGraph(AGsptr g){
 }
 
 
+void 
+CatenaFactory::addPhiLayer(APLsptr p){
+	_PhiLayers[p->getName()] = p;
+	_PhiLayers[p->getShortHandle()] = p;
+	_PhiLayersText << createText(p->getName(), p->getShortHandle(), 
+			p->getDescription());
+}
+
 std::vector<AAsptr>
 CatenaFactory::getAlgorithms(){
 	std::vector<AAsptr> v;
@@ -191,6 +212,17 @@ CatenaFactory::getGraphs(){
 	return v;
 }
 
+std::vector<APLsptr>
+CatenaFactory::getPhiLayers(){
+	std::vector<APLsptr> v;
+	for(std::map<std::string, APLsptr>::iterator 
+		it = _PhiLayers.begin(); it != _PhiLayers.end(); ++it) 
+	{
+  		v.push_back(it->second);
+	}
+	return v;
+}
+
 AAsptr 
 CatenaFactory::getAlgorithm(std::string s)
 {
@@ -225,6 +257,11 @@ CatenaFactory::getGraph(std::string s)
 	return _Graphs[s];
 }
 
+APLsptr 
+CatenaFactory::getPhiLayer(std::string s)
+{
+	return _PhiLayers[s];
+}
 
 std::string 
 CatenaFactory::getAlgorithmsText()
@@ -258,4 +295,11 @@ std::string
 CatenaFactory::getGraphsText()
 {
 	return _GraphsText.str();
+}
+
+
+std::string 
+CatenaFactory::getPhiLayersText()
+{
+	return _PhiLayersText.str();
 }

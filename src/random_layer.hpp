@@ -4,6 +4,7 @@
 
 #include "hashfast.hpp"
 #include "hashfull.hpp"
+#include "graph.hpp"
 
 namespace Catena_Variants{
 
@@ -13,12 +14,14 @@ public:
 	virtual ~AbstractRandomLayer() = default;
 	virtual AbstractRandomLayer* clone() const=0;
 	
-	virtual void process(const uint8_t x[H_LEN], const uint8_t lambda, 
+	virtual void process(const uint8_t* x, const std::string structure, 
 					const uint8_t garlic, const uint8_t *salt, 
               		const uint8_t saltlen, uint8_t *r)=0;
 	
 	virtual void setFullHash(AHFUsptr h)=0;
 	virtual void setHashFast(AHFAsptr h)=0;
+	virtual void setGraph(AGsptr g)=0;
+
 
 };
 
@@ -37,10 +40,13 @@ public:
 
 	void setFullHash(AHFUsptr h);
 	void setHashFast(AHFAsptr h);
+	void setGraph(AGsptr g);
+
 
 protected:
 	AHFUsptr 	_hashfull;
 	AHFAsptr	_hashfast;
+	AGsptr		_graph;
 };
 
 #include "random_layer.ipp"

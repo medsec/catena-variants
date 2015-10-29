@@ -11,6 +11,12 @@ RandomLayer<Derived>::setHashFast(AHFAsptr h){
 }
 
 template <typename Derived>
+void 
+RandomLayer<Derived>::setGraph(AGsptr g) {
+	_graph = g;
+}
+
+template <typename Derived>
 AbstractRandomLayer*
 RandomLayer<Derived>::clone() const{
 	return new Derived(static_cast<Derived const&>(*this));

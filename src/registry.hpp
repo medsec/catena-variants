@@ -27,6 +27,9 @@ public:
 		if(AGsptr gsptr = std::dynamic_pointer_cast<AbstractGraph>(tsptr)){
 			CatenaFactory::instance().addGraph(gsptr);
 		}
+		if(APLsptr psptr=std::dynamic_pointer_cast<AbstractPhiLayer>(tsptr)){
+			CatenaFactory::instance().addPhiLayer(psptr);
+		}
 	}
 };
 

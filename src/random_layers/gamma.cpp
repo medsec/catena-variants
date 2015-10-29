@@ -15,12 +15,12 @@ Gamma::Gamma()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void 
-Gamma::process(const uint8_t x[H_LEN], const uint8_t lambda, 
+Gamma::process(const uint8_t* x, const std::string structure, 
 			  	const uint8_t garlic, const uint8_t *salt, 
                	const uint8_t saltlen, uint8_t *r)
 {
 	const uint64_t q = UINT64_C(1) << ((3*garlic+3)/4);
-
+	const uint8_t H_LEN_FAST = _hashfast->getHlenFast();
 	uint64_t i, j, j2;
 	uint8_t *tmp = (uint8_t*) malloc(H_LEN);
 	uint8_t *tmp2 = (uint8_t*) malloc(H_LEN);
@@ -34,7 +34,7 @@ Gamma::process(const uint8_t x[H_LEN], const uint8_t lambda,
 		j = xorshift1024star() >> (64 - garlic);
 		j2 = xorshift1024star() >> (64 - garlic);
 		//v_j1= H'(v_j1||v_j2)
-		_hashfast->Hash(i, r + j * H_LEN, r + j2 * H_LEN, r + j * H_LEN); 
+		_hashfast->Hash(i, r + _graph->index(j, garlic) * H_LEN_FAST, r + _graph->index(j2, garlic) * H_LEN_FAST, r + _graph->index(j, garlic) * H_LEN_FAST); 
 	}
 
 	free(tmp);

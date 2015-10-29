@@ -42,6 +42,7 @@
 /* ... */
 #endif
 
+#include <emmintrin.h>
 
 
 #define G1(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1) \
@@ -62,7 +63,7 @@
   \
   row2l = _mm_roti_epi64(row2l, -24); \
   row2h = _mm_roti_epi64(row2h, -24); \
- 
+
 #define G2(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1) \
   row1l = _mm_add_epi64(_mm_add_epi64(row1l, b0), row2l); \
   row1h = _mm_add_epi64(_mm_add_epi64(row1h, b1), row2h); \
@@ -81,6 +82,58 @@
   \
   row2l = _mm_roti_epi64(row2l, -63); \
   row2h = _mm_roti_epi64(row2h, -63); \
+
+/*Main change compared with Blake2b*/
+static inline __m128i fBlaMka(__m128i x, __m128i y){
+    __m128i z = _mm_mul_epu32 (x, y);
+    
+    z = _mm_slli_epi64 (z, 1);
+    
+    z = _mm_add_epi64 (z, x);
+    z = _mm_add_epi64 (z, y);
+    
+    return z;
+}
+
+#define G1_BLAMKA_SIGMA(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1) \
+  row1l = _mm_add_epi64(fBlaMka(row1l, row2l), b0); \
+  row1h = _mm_add_epi64(fBlaMka(row1h, row2h), b1); \
+  \
+  row4l = _mm_xor_si128(row4l, row1l); \
+  row4h = _mm_xor_si128(row4h, row1h); \
+  \
+  row4l = _mm_roti_epi64(row4l, -32); \
+  row4h = _mm_roti_epi64(row4h, -32); \
+  \
+  row3l = fBlaMka(row3l, row4l); \
+  row3h = fBlaMka(row3h, row4h); \
+  \
+  row2l = _mm_xor_si128(row2l, row3l); \
+  row2h = _mm_xor_si128(row2h, row3h); \
+  \
+  row2l = _mm_roti_epi64(row2l, -24); \
+  row2h = _mm_roti_epi64(row2h, -24); \
+
+ 
+#define G2_BLAMKA_SIGMA(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1) \
+  row1l = _mm_add_epi64(fBlaMka(row1l, row2l), b0); \
+  row1h = _mm_add_epi64(fBlaMka(row1h, row2h), b1); \
+  \
+  row4l = _mm_xor_si128(row4l, row1l); \
+  row4h = _mm_xor_si128(row4h, row1h); \
+  \
+  row4l = _mm_roti_epi64(row4l, -16); \
+  row4h = _mm_roti_epi64(row4h, -16); \
+  \
+  row3l = fBlaMka(row3l, row4l); \
+  row3h = fBlaMka(row3h, row4h); \
+  \
+  row2l = _mm_xor_si128(row2l, row3l); \
+  row2h = _mm_xor_si128(row2h, row3h); \
+  \
+  row2l = _mm_roti_epi64(row2l, -63); \
+  row2h = _mm_roti_epi64(row2h, -63); \
+
  
 #if defined(HAVE_SSSE3)
 #define DIAGONALIZE(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h) \
@@ -156,5 +209,19 @@
   G2(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1); \
   UNDIAGONALIZE(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h);
 
+#define ROUND_BLAMKA_SIGMA(r) \
+  LOAD_MSG_ ##r ##_1(b0, b1); \
+  G1_BLAMKA_SIGMA(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1); \
+  LOAD_MSG_ ##r ##_2(b0, b1); \
+  G2_BLAMKA_SIGMA(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1); \
+  DIAGONALIZE(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h); \
+  LOAD_MSG_ ##r ##_3(b0, b1); \
+  G1_BLAMKA_SIGMA(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1); \
+  LOAD_MSG_ ##r ##_4(b0, b1); \
+  G2_BLAMKA_SIGMA(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h,b0,b1); \
+  UNDIAGONALIZE(row1l,row2l,row3l,row4l,row1h,row2h,row3h,row4h);
+
 #endif
+
+
 

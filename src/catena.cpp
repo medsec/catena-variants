@@ -10,6 +10,8 @@
 #include "catena.hpp"
 #include "catena-helpers.hpp"
 
+#include <algorithm>
+
 using namespace Catena_Variants;
 
 
@@ -25,17 +27,20 @@ void
 Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
 	     const uint8_t *salt,  const uint8_t  saltlen,
 	     const uint8_t *data,  const uint32_t datalen,
-	     const uint8_t lambda, const uint8_t  min_garlic,
+	     const std::string structure, const uint8_t  min_garlic,
 	     const uint8_t garlic, const size_t  hashlen,
 	     const uint8_t client, const uint8_t  tweak_id, uint8_t *hash)
 {
+  const uint16_t H_LEN_FAST = _algorithm->getHlenFast();
+  uint8_t* x_long = (uint8_t*) malloc(H_LEN_FAST);
+
   uint8_t x[H_LEN];
   uint8_t hv[H_LEN];
   uint8_t t[4];
   uint8_t c;
 
   if((hashlen > H_LEN) || (garlic > 63) || (min_garlic > garlic) || 
-    (lambda == 0) || (garlic == 0) ){
+    (structure == "") || (garlic == 0) ){
      throw std::range_error("Catena parameters out of range");
   }
 
@@ -49,9 +54,11 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
         strlen((char*)_versionID), hv); 
   }
 
+
+
   /* Compute Tweak */
   t[0] = tweak_id;
-  t[1] = lambda;
+  t[1] = std::count(structure.begin(), structure.end(), 'g');
   t[2] = hashlen;
   t[3] = saltlen;
 
@@ -67,17 +74,23 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
   }
 
 
-  _algorithm->flap(x, lambda, (min_garlic+1)/2, salt, saltlen, x);
+  _algorithm->flap(x, H_LEN, structure, (min_garlic+1)/2, salt, saltlen, x_long);
 
   for(c=min_garlic; c <= garlic; c++)
   {
-      _algorithm->flap(x, lambda, c, salt, saltlen, x);
+      if(c==min_garlic){
+        _algorithm->flap(x_long,H_LEN_FAST, structure, c, salt, saltlen, x_long);  
+      }
+      else{
+        _algorithm->flap(x,H_LEN, structure, c, salt, saltlen, x_long);
+      }
+      
       if( (c==garlic) && (client == CLIENT))
       {
-        memcpy(hash, x, H_LEN);
+        memcpy(hash, x_long, H_LEN);
         return;
       }
-      _hash->Hash2(&c,1, x,H_LEN, x);
+      _hash->Hash2(&c,1, x_long,H_LEN_FAST, x);
       memset(x+hashlen, 0, H_LEN-hashlen);
   }
   memcpy(hash, x, hashlen);
@@ -90,11 +103,11 @@ void
 Catena::Default(uint8_t *pwd,   const uint32_t pwdlen,
 	   const uint8_t *salt,  const uint8_t  saltlen,
 	   const uint8_t *data,  const uint32_t datalen,
-	   const uint8_t lambda, const uint8_t  min_garlic,
+	   const std::string structure, const uint8_t  min_garlic,
 	   const uint8_t garlic, const uint8_t  hashlen,  uint8_t *hash)
 {
   return _Catena(pwd, pwdlen, salt, saltlen, data, datalen,
-		  lambda, min_garlic, garlic,
+		  structure, min_garlic, garlic,
 		  hashlen,  REGULAR, PASSWORD_HASHING_MODE, hash);
 
 }
@@ -110,7 +123,7 @@ Catena::Naive(char *pwd,  const char *salt, const char *data,
   return _Catena( (uint8_t  *) pwd, strlen(pwd),
 		   (uint8_t  *) salt, strlen(salt),
 		   (uint8_t  *) data, strlen(data),
-		  _algorithm->getDefaultLambda(), _algorithm->getDefaulMinGarlic(),
+		  _algorithm->getDefaultStructure(), _algorithm->getDefaulMinGarlic(),
       _algorithm->getDefaultGarlic(),
 		   H_LEN, REGULAR, PASSWORD_HASHING_MODE, hash);
 }
@@ -125,7 +138,7 @@ Catena::Simple(uint8_t *pwd,   const uint32_t pwdlen,
 		  uint8_t hash[H_LEN])
 {
   return _Catena(pwd, pwdlen, salt, saltlen, data, datalen,
-		  _algorithm->getDefaultLambda(), _algorithm->getDefaulMinGarlic(),
+		  _algorithm->getDefaultStructure(), _algorithm->getDefaulMinGarlic(),
       _algorithm->getDefaultGarlic(), H_LEN,
 		  REGULAR, PASSWORD_HASHING_MODE, hash);
 }
@@ -137,12 +150,12 @@ void
 Catena::Client(uint8_t  *pwd,   const uint32_t pwdlen,
 		  const uint8_t  *salt,  const uint8_t  saltlen,
 		  const uint8_t  *data,  const uint32_t datalen,
-		  const uint8_t lambda, const uint8_t  min_garlic,
+		  const std::string structure, const uint8_t  min_garlic,
 		  const uint8_t  garlic, const uint8_t  hashlen,
 		  uint8_t x[H_LEN])
 {
   return _Catena(pwd, pwdlen, (uint8_t *) salt, saltlen, data, datalen,
-		  lambda, min_garlic, garlic, hashlen,
+		  structure, min_garlic, garlic, hashlen,
 		  CLIENT, PASSWORD_HASHING_MODE, x);
 }
 
@@ -189,7 +202,7 @@ Catena::Keyed_Server(const uint8_t garlic, const uint8_t x[H_LEN],
 /***************************************************/
 
 void 
-Catena::CI_Update(const uint8_t *old_hash,  const uint8_t lambda,
+Catena::CI_Update(const uint8_t *old_hash,  const std::string structure,
          const uint8_t *salt,  const uint8_t saltlen,
 	       const uint8_t old_garlic, const uint8_t new_garlic,
 	       const uint8_t hashlen, uint8_t *new_hash)
@@ -202,7 +215,7 @@ Catena::CI_Update(const uint8_t *old_hash,  const uint8_t lambda,
 
   for(c=old_garlic+1; c <= new_garlic; c++)
     {
-      _algorithm->flap(x, lambda, c, salt, saltlen, x);
+      _algorithm->flap(x,H_LEN, structure, c, salt, saltlen, x);
       _hash->Hash2(&c,1,x, H_LEN, x);
       memset(x+hashlen, 0, H_LEN-hashlen);
     }
@@ -216,7 +229,7 @@ void
 Catena::KeyGeneration(uint8_t *pwd,   const uint32_t pwdlen,
 	       const uint8_t *salt,  const uint8_t saltlen,
 	       const uint8_t *data,  const uint32_t datalen,
-	       const uint8_t lambda, const uint8_t  min_garlic,
+	       const std::string structure, const uint8_t  min_garlic,
 	       const uint8_t garlic, uint32_t keylen,
 	       const uint8_t key_id, uint8_t *key)
 {
@@ -228,7 +241,7 @@ Catena::KeyGeneration(uint8_t *pwd,   const uint32_t pwdlen,
   keylen = TO_LITTLE_ENDIAN_32(keylen);
 
   _Catena(pwd, pwdlen, salt, saltlen, data, datalen,
-	   lambda, min_garlic, garlic, H_LEN, REGULAR, KEY_DERIVATION_MODE,
+	   structure, min_garlic, garlic, H_LEN, REGULAR, KEY_DERIVATION_MODE,
 	   hash);
 
   for(i=0; i < len; i++) {
@@ -253,7 +266,7 @@ void
 Catena::KeyedHashing(uint8_t *pwd,   const uint32_t pwdlen,
 			  const uint8_t *salt,  const uint8_t saltlen,
 			  const uint8_t *data,  const uint32_t datalen,
-			  const uint8_t lambda, const uint8_t  min_garlic,
+			  const std::string structure, const uint8_t  min_garlic,
 			  const uint8_t garlic, const uint8_t  hashlen,
 			  const uint8_t *key,   const uint64_t uuid,
 			  uint8_t *chash)
@@ -263,7 +276,7 @@ Catena::KeyedHashing(uint8_t *pwd,   const uint32_t pwdlen,
   int i;
 
    _Catena(pwd, pwdlen, salt, saltlen, data, datalen,
-	    lambda, min_garlic, garlic, hashlen,
+	    structure, min_garlic, garlic, hashlen,
 	    REGULAR, PASSWORD_HASHING_MODE, chash);
 
    _hash->Hash3(key, KEY_LEN,  (uint8_t*) &tmp, 8, key, KEY_LEN, keystream);
@@ -307,10 +320,10 @@ Catena::getDefaultVersionID() const
 }
 
 
-uint8_t 
-Catena::getDefaultLambda()const
+std::string 
+Catena::getDefaultStructure()const
 {
-  return _algorithm->getDefaultLambda();
+  return _algorithm->getDefaultStructure();
 }
 
 
@@ -325,4 +338,10 @@ uint8_t
 Catena::getDefaulMinGarlic()const
 {
   return _algorithm->getDefaulMinGarlic();
+}
+
+uint64_t 
+Catena::getMemoryRequirement(uint8_t garlic)const
+{
+  return _algorithm->getMemoryRequirement(garlic);
 }

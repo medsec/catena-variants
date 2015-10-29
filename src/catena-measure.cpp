@@ -16,7 +16,8 @@ static std::string graph= "";
 static std::string fuh = "";
 static std::string fah = "";
 static std::string rl = "";
-static int lambda = -1;
+static std::string pl = "";
+static std::string stru = "";
 static int mg = -1;
 static int g = -1;
 static int iterations = -1;
@@ -33,9 +34,10 @@ void print_usage(char **argv){
 		"\t-f, --fasthash FASTH\thash function used for consecutive calls\n" <<
 			"\t\t\t\t(formal: H')\n" <<
 		"\t-r, --random_layer RL\tfirst layer(formal: Gamma)\n" <<
+		"\t-h, --phi_layer PL\textra layer(formal: Phi)\n" <<
 		"\t-i, --iterations I\tnumber of iterations used to determine the \n"<< 
 			"\t\t\t\truntime. Higher values increase stability\n" <<
-		"\t-l, --lambda L\t\ttime cost. Default depends on graph\n"<<
+		"\t-t, --structure T\tGraph structure (r - random, g - graph). Default depends on graph\n"<<
 		"\t-m, --min_garlic MG\tLower memory cost(formal: g0). Default\n"<<
 			"\t\t\t\tdepends on graph\n"
 		"\t-c, --garlic G\t\tmemory cost(formal:g). Default depends on graph"<<
@@ -50,14 +52,12 @@ void print_usage(char **argv){
 		CatenaFactory::instance().getFastHashesText() <<
 		"RandomLayers - possible values for RL:\n" <<
 		CatenaFactory::instance().getRandomLayersText() <<
+		"PhiLayers - possible values for PL:\n" <<
+		CatenaFactory::instance().getPhiLayersText() <<
 		std::endl;
 }
 
 int chkparams(){
-	if(lambda > 255){
-		std::cerr << "Lambda to large. Limit is 255" << std::endl;
-		return 1;
-	}
 	if(mg > 63){
 		std::cerr << "MinGarlic to large. Limit is 63" << std::endl;
 		return 1;
@@ -87,6 +87,10 @@ int chkparams(){
 		std::cerr << "RandomLayer required but missing" << std::endl;
 		return 1;
 	}
+	if(pl.empty()){
+		std::cerr << "PhiLayer required but missing" << std::endl;
+		return 1;
+	}
 	if(iterations < 1){
 		std::cerr << "Iterations required but missing" << std::endl;
 		return 1;
@@ -111,7 +115,8 @@ int parse_args(int argc, char **argv)
 		  {"fullhash",		required_argument, 	0, 'u'},
 		  {"fasthash",		required_argument, 	0, 'f'},
 		  {"random_layer",	required_argument, 	0, 'r'},
-		  {"lambda",		required_argument, 	0, 'l'},
+		  {"phi_layer",		required_argument, 	0, 'h'},
+		  {"structure",		required_argument, 	0, 't'},
 		  {"min_garlic",	required_argument, 	0, 'm'},
 		  {"garlic",		required_argument, 	0, 'c'},
 		  {"iterations",	required_argument, 	0, 'i'},
@@ -123,7 +128,7 @@ int parse_args(int argc, char **argv)
 		char* endptr = NULL; //for parsing numbers
 
 		//_only also recognizes long options that start with a single -
-		r = getopt_long_only(argc, argv, "a:g:u:f:r:v:p:s:d:l:m:c:o:", 
+		r = getopt_long_only(argc, argv, "a:g:u:f:r:h:t:v:p:s:d:l:m:c:o:", 
 			long_options, NULL);
 
 		/* Detect the end of the options. */
@@ -152,9 +157,13 @@ int parse_args(int argc, char **argv)
 				rl = optarg;
 				if(rl.empty()){invalid("RandomLayer"); return 1;}
 			  	break;
-			case 'l':
-			  	lambda = strtod(optarg, &endptr);
-			  	if (*endptr != '\0' || lambda < 1){invalid("Lambda"); return 1;}
+			case 'h':
+				pl = optarg;
+				if(pl.empty()){invalid("PhiLayer"); return 1;}
+			  	break;
+			case 't':
+				stru = optarg;
+				//accept empty structure
 			  	break;
 			case 'm':
 			  	mg = strtod(optarg, &endptr);
@@ -211,7 +220,7 @@ double measure(Catena c){
 	for(int i = 0; i < iterations; i++){
 		diff = clock();
 		c.Default(pwd, pwdlen, (const uint8_t*)salt, saltlen, 
-			(const uint8_t*) data, datalen, lambda, mg, g,
+			(const uint8_t*) data, datalen, stru, mg, g,
 		 	H_LEN, hash1);
 		diff = clock() - diff;
 		t[i] = ((double)diff) / CLOCKS_PER_SEC;
@@ -232,10 +241,10 @@ int main(int argc, char **argv)
 	try
 	{
 		Catena c = CatenaFactory::instance()
-			.create(alg, fuh, fah, rl, graph);
+			.create(alg, fuh, fah, rl, graph, pl);
 
-		if(lambda < 0){
-			lambda = c.getDefaultLambda();
+		if(stru ==""){
+			stru = c.getDefaultStructure();
 		}
 		if(mg < 0){
 			mg = c.getDefaulMinGarlic();
@@ -248,8 +257,8 @@ int main(int argc, char **argv)
 		//Output
 		std::cout << std::fixed << std::setprecision(2);
 		std::cout << "Hashing took " << t << "s and required roughly " <<
-			(CatenaFactory::instance().getGraph(graph)->getMemoryRequirement(g) 
-				/1024) << " KiB of memory" <<std::endl;
+			(c.getMemoryRequirement(g) 
+				/HASH_PER_KiB)/64 << " KiB of memory" <<std::endl;
 	}
 	catch (std::exception& e)
 	{

@@ -26,6 +26,9 @@ Algorithm<Derived>::setHashFast(AHFAsptr h){
 	if(_randomlayer){
 		_randomlayer->setHashFast(h);
 	}
+	if(_philayer){
+		_philayer->setHashFast(h);
+	}
 }
 
 template <typename Derived>
@@ -38,6 +41,12 @@ template <typename Derived>
 void 
 Algorithm<Derived>::setRandomLayer(ARLsptr r){
 	_randomlayer = r;
+}			
+
+template <typename Derived>
+void 
+Algorithm<Derived>::setPhiLayer(APLsptr p){
+	_philayer = p;
 }
 
 template <typename Derived>
@@ -49,10 +58,10 @@ Algorithm<Derived>::getDefaultVersionID() const
 
 
 template <typename Derived>
-uint8_t 
-Algorithm<Derived>::getDefaultLambda()const
+std::string 
+Algorithm<Derived>::getDefaultStructure()const
 {
-	return _graph->getDefaultLambda();
+	return _graph->getDefaultStructure();
 }
 
 template <typename Derived>
@@ -67,4 +76,18 @@ uint8_t
 Algorithm<Derived>::getDefaulMinGarlic()const
 {
 	return _graph->getDefaulMinGarlic();
+}
+
+template <typename Derived>
+uint16_t 
+Algorithm<Derived>::getHlenFast()const
+{
+	return _hashfast->getHlenFast();
+}
+
+template <typename Derived>
+uint64_t 
+Algorithm<Derived>::getMemoryRequirement(uint8_t garlic)const
+{
+	return _graph->getMemoryRequirement(garlic);
 }

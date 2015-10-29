@@ -31,14 +31,17 @@ public:
 	/* Single round of Blake2b on a single state
 	 */
 	virtual void Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
-			uint8_t hash[H_LEN]);
+			uint8_t* hash);
 
 	/* Resets the Blake2b state
 	*/
 	virtual void ResetState(); 
 
+	virtual uint16_t getHlenFast()const;
+
 private:
 	blake2b_state* _state;
+	uint16_t const H_LEN_FAST = 64;
 };
 
 } //end namespace
