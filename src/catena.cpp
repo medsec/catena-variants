@@ -16,13 +16,6 @@ using namespace Catena_Variants;
 
 
 /***************************************************/
-
-void print_hex(uint8_t *key, int len)
-{
-  int i;
-  for(i=0; i< len; i++) printf("%02x",key[i]);  puts("");
-}
-
 Catena::Catena()
 :_overwrite(false), _versionID(NULL)
 {}

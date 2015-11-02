@@ -1,8 +1,6 @@
 #include "DBG.hpp" 
 #include "../registry.hpp"
 #include "../catena-helpers.hpp"
-
-
 #include <algorithm>
 
 using namespace Catena_Variants;
@@ -17,11 +15,6 @@ DBG::DBG()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-void print_hex3(uint8_t *key, int len)
-{
-  int i;
-  for(i=0; i< len; i++) printf("%02x",key[i]);  puts("");
-}
 
 void 
 DBG::process(const uint8_t x[H_LEN], const std::string structure, 
@@ -40,9 +33,7 @@ DBG::process(const uint8_t x[H_LEN], const std::string structure,
   /* DBH */
   //for (k = 0; k < lambda; k++) {
     //rows
-    printf("State inner\n");
-    print_hex3(r, 8);
-      printf("CO: %d\n", co);
+
     for(i=1; i < l; i++){
       //tmp:= v2^g-1 XOR v0
       XOR(r + idx(i-1,c-1,c,m)*H_LEN_FAST, r + idx(i-1,0,c,m)*H_LEN_FAST, tmp, H_LEN_FAST);
@@ -67,7 +58,6 @@ DBG::process(const uint8_t x[H_LEN], const std::string structure,
   }
   co = (co + (i-1)) % 3;
   memcpy(h, r + idx(0,c-1,c,m) * H_LEN_FAST, H_LEN_FAST);
-      printf("CO after mod: %d\n", co);
 
   executionCounter++;
   if(executionCounter == std::count(structure.begin(), structure.end(), 'g')){
