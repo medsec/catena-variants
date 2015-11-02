@@ -17,6 +17,11 @@ using namespace Catena_Variants;
 
 /***************************************************/
 
+void print_hex(uint8_t *key, int len)
+{
+  int i;
+  for(i=0; i< len; i++) printf("%02x",key[i]);  puts("");
+}
 
 Catena::Catena()
 :_overwrite(false), _versionID(NULL)
@@ -54,7 +59,7 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
         strlen((char*)_versionID), hv); 
   }
 
-
+  
 
   /* Compute Tweak */
   t[0] = tweak_id;
@@ -64,10 +69,8 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
 
   /* Compute H(AD) */
   _hash->Hash1((uint8_t *) data, datalen,x);
-
   /* Compute the initial value to hash  */
   _hash->Hash5(hv, H_LEN, t, 4, x, H_LEN, pwd,  pwdlen, salt, saltlen, x);
-
   /*Overwrite Password if enabled*/
   if(_overwrite){
     erasepwd(pwd,pwdlen);
