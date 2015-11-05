@@ -166,11 +166,6 @@ Cfaes::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
         aesfour_encrypt((uint8_t*)&S[2*i], (uint8_t*)&S[2*i], &aeskey);
     }
 
-    for(uint16_t i = 0; i!=64;++i){
-        S[2*i]^=bigStmp[0];
-        S[2*i+1]^=bigStmp[1];
-        aesfour_encrypt((uint8_t*)&S[2*i], (uint8_t*)&S[2*i], &aeskey);
-    }
     memcpy(hash, S, H_LEN_FAST);
 }
 

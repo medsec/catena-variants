@@ -20,7 +20,7 @@ Gamma::process(const uint8_t* x, const std::string structure,
                	const uint8_t saltlen, uint8_t *r)
 {
 	const uint64_t q = UINT64_C(1) << ((3*garlic+3)/4);
-	const uint8_t H_LEN_FAST = _hashfast->getHlenFast();
+	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	uint64_t i, j, j2;
 	uint8_t *tmp = (uint8_t*) malloc(H_LEN);
 	uint8_t *tmp2 = (uint8_t*) malloc(H_LEN);

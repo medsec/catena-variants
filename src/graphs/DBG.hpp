@@ -40,6 +40,7 @@ private:
 
 	std::string const VERSION_ID = "Butterfly";
 	std::string const STRUCTURE = "gggrg";
+	uint8_t executionCounter = 0;
 	uint8_t const GARLIC = 16;
 	uint8_t const MIN_GARLIC = 16;
 	uint8_t co = 0;
