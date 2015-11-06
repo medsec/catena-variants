@@ -27,7 +27,7 @@ Phi_Lsb::process(const uint8_t garlic, uint8_t *r, uint8_t* h)
 	uint8_t * p_old = p;
 	for (i = 1; i < c; i++/*, p += H_LEN_FAST*/) {
 			p = r+i*(H_LEN_FAST);
-			_hashfast->Hash(i, r + R((uint64_t*)(p_old), garlic)*H_LEN_FAST, p_old, p);
+			_hashfast->Hash(i, r + _graph->index(R((uint64_t*)(p_old), garlic), garlic)*H_LEN_FAST, p_old, p);
 			p_old=p;
 		}
 	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
