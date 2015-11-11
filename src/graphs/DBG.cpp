@@ -59,12 +59,6 @@ DBG::process(const uint8_t x[H_LEN], const std::string structure,
   co = (co + (i-1)) % 3;
   memcpy(h, r + idx(0,c-1,c,m) * H_LEN_FAST, H_LEN_FAST);
 
-  executionCounter++;
-  if(executionCounter == std::count(structure.begin(), structure.end(), 'g')){
-    executionCounter = 0;
-    co = 0;
-  }
-
   free(tmp);
 }
 #pragma GCC diagnostic pop
@@ -125,6 +119,11 @@ DBG::getMemoryRequirement(uint8_t garlic)const
 {
   const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	return ((UINT64_C(1) << garlic) + (UINT64_C(1) << (garlic-1)))  * H_LEN_FAST;
+}
+
+void DBG::resetState()
+{
+  co = 0;
 }
 
 

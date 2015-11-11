@@ -79,6 +79,10 @@ GR3::getMemoryRequirement(uint8_t garlic)const
 	return 2*(UINT64_C(1) << garlic) * H_LEN_FAST;
 }
 
+void 
+GR3::resetState()
+{
+}
 
 std::string
 GR3::getDefaultStructure()const{

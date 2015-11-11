@@ -15,6 +15,8 @@ public:
 
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const;
 
+	virtual void resetState();
+
 	virtual std::string getDefaultStructure()const;
  	virtual uint8_t getDefaultGarlic()const;
  	virtual uint8_t getDefaulMinGarlic()const;

@@ -25,6 +25,9 @@ public:
 	/*Returns the required memory in byte*/
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const = 0;
 
+	/*resets member variables*/
+	virtual void resetState() = 0;
+
 	virtual void setFullHash(AHFUsptr h)=0;
 	virtual void setHashFast(AHFAsptr h)=0;
 	

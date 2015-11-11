@@ -79,6 +79,10 @@ GR2::getMemoryRequirement(uint8_t garlic)const
 	return 2*(UINT64_C(1) << garlic) * H_LEN_FAST;
 }
 
+void 
+GR2::resetState()
+{
+}
 
 std::string
 GR2::getDefaultStructure()const{
