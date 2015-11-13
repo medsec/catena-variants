@@ -66,6 +66,7 @@ CatenaFactory::create(std::string const& alg, std::string const& hfull,
 	}
 	//set up graph for indexing
 	p->setHashFast(hfa);
+	p->setFullHash(hfu);
 	p->setGraph(g);
 	r->setGraph(g);
 	

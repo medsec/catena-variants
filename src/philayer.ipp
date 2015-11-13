@@ -1,4 +1,10 @@
 template <typename Derived>
+void 
+PhiLayer<Derived>::setFullHash(AHFUsptr h){
+	_hashfull = h;
+}
+
+template <typename Derived>
 void
 PhiLayer<Derived>::setHashFast(AHFAsptr h){
 	_hashfast = h;

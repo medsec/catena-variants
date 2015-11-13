@@ -14,6 +14,9 @@ Algorithm<Derived>::setFullHash(AHFUsptr h){
 	if(_randomlayer){
 		_randomlayer->setFullHash(h);
 	}
+	if(_philayer){
+		_randomlayer->setFullHash(h);
+	}
 }
 
 template <typename Derived>

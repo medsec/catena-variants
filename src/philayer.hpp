@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "constants.hpp"
 #include "hashfast.hpp"
+#include "hashfull.hpp"
 #include "graph.hpp"
 
 namespace Catena_Variants{
@@ -22,6 +23,7 @@ public:
 	/* Resets the State used for PhiLayer if necessary
 	*/
 	virtual void ResetState()=0;
+	virtual void setFullHash(AHFUsptr h)=0;
 	virtual void setHashFast(AHFAsptr h)=0;
 	virtual	void setGraph(AGsptr g)=0;
 
@@ -40,12 +42,14 @@ public:
 	virtual ~PhiLayer() = default;
 
 	virtual AbstractPhiLayer* clone() const;
-
+	
+	void setFullHash(AHFUsptr h);
 	void setHashFast(AHFAsptr h);
 	void setGraph(AGsptr g);
 
 protected:
 	AHFAsptr 	_hashfast;
+	AHFUsptr 	_hashfull;
 	AGsptr		_graph;
 };
 
