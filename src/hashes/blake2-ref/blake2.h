@@ -113,6 +113,9 @@ extern "C" {
   } blake2bp_state;
 #pragma pack(pop)
 
+  
+  void print_state(blake2b_state *S);
+
   // Streaming API
   int blake2s_init( blake2s_state *S, const uint8_t outlen );
   int blake2s_init_key( blake2s_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );

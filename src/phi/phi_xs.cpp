@@ -15,6 +15,7 @@ void
 Phi_XS::ResetState()
 {}
 
+
 void 
 Phi_XS::process(const uint8_t garlic, uint8_t *r, uint8_t* h)
 {
@@ -24,14 +25,14 @@ Phi_XS::process(const uint8_t garlic, uint8_t *r, uint8_t* h)
 	uint8_t *tmp = (uint8_t*) malloc(H_LEN);
 	uint8_t *tmp2 = (uint8_t*) malloc(H_LEN);
 	
-	_hashfull->Hash1(r+H_LEN_FAST*_graph->index(c-1, garlic),H_LEN,tmp);  
+	_hashfull->Hash1(r+H_LEN_FAST*_graph->index(c-1, garlic),H_LEN_FAST,tmp);  
 	_hashfull->Hash1(tmp,H_LEN,tmp2);  
 
 	initXSState(tmp, tmp2);
 	_hashfast->ResetState();
 
 	j = xorshift1024star() >> (64 - garlic);
-	_hashfast->Hash(0, r+H_LEN_FAST*_graph->index(0, garlic), r + _graph->index(j, garlic) * H_LEN_FAST, r+_graph->index(0,garlic)); 
+	_hashfast->Hash(0, r+H_LEN_FAST*_graph->index(0, garlic), r + _graph->index(j, garlic) * H_LEN_FAST, r+_graph->index(0,garlic)* H_LEN_FAST); 
 	for(i = 1; i < c; i++){
 		j = xorshift1024star() >> (64 - garlic);
 		_hashfast->Hash(i, r + _graph->index(i-1, garlic) * H_LEN_FAST, r + _graph->index(j, garlic)* H_LEN_FAST, r + _graph->index(i, garlic) * H_LEN_FAST); 

@@ -1,7 +1,6 @@
 #include "argonCF.hpp"
 #include "../registry.hpp"
 
-
 #if defined(__SSE2__)
 //SSE optimized
 #include <x86intrin.h>
@@ -200,8 +199,7 @@ argonCF::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
         }
     /////////
     block block_tmp = blockR;
-
-
+    
     //Apply Blake2 on columns of 64-bit words: (0,1,...,15) , then (16,17,..31)... finally (112,113,...127)
     for (unsigned i = 0; i < 8; ++i) {
         BLAKE2_ROUND_NOMSG(blockR[16 * i], blockR[16 * i + 1], blockR[16 * i + 2], blockR[16 * i + 3],
@@ -218,6 +216,7 @@ argonCF::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
     }
 
     blockR ^= block_tmp;
+
     memcpy(hash, blockR.v, 1024);
   
 }

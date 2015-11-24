@@ -89,7 +89,6 @@ void
 PCompressG::Hash(int vindex, const uint8_t* i1, const uint8_t* i2, 
 			uint8_t* hash)
 {
-
     uint64_t v[16]={1};
     uint8_t hash_xor[H_LEN_FAST];
     memcpy(v, i1, 64);
@@ -103,7 +102,6 @@ PCompressG::Hash(int vindex, const uint8_t* i1, const uint8_t* i2,
     for(uint16_t i = 0; i != H_LEN_FAST; ++i){
         hash[i]^=hash_xor[i];
     }
-
 }
 
 #endif

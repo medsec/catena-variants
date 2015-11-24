@@ -20,7 +20,6 @@ Catena::Catena()
 :_overwrite(false), _versionID(NULL)
 {}
 
-
 void 
 Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
 	     const uint8_t *salt,  const uint8_t  saltlen,
@@ -62,13 +61,13 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
 
   /* Compute H(AD) */
   _hash->Hash1((uint8_t *) data, datalen,x);
+  
   /* Compute the initial value to hash  */
   _hash->Hash5(hv, H_LEN, t, 4, x, H_LEN, pwd,  pwdlen, salt, saltlen, x);
   /*Overwrite Password if enabled*/
   if(_overwrite){
     erasepwd(pwd,pwdlen);
   }
-
 
   _algorithm->flap(x, H_LEN, structure, (min_garlic+1)/2, salt, saltlen, x_long);
 
@@ -80,7 +79,7 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
       else{
         _algorithm->flap(x,H_LEN, structure, c, salt, saltlen, x_long);
       }
-      
+
       if( (c==garlic) && (client == CLIENT))
       {
         memcpy(hash, x_long, H_LEN);

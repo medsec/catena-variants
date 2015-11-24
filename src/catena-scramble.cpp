@@ -236,8 +236,10 @@ int parse_args(int argc, char **argv)
     return chkparams();
 }
 
+
 int main(int argc, char **argv)
 {
+
 	if(parse_args(argc,argv)){
 		print_usage(argv);
 		return 1;
@@ -281,8 +283,9 @@ int main(int argc, char **argv)
 	  	
 	  	c.Default(pw, pwdlen ,salt, saltlen, data, datalen, stru, mg, g,
 		 	hashlen, hash1);
-
-	  	//Output
+		
+		//Output
+	  	// for(int i=0; i< hashlen; i++) printf("16#%02x#,",hash1[i]);  puts("");
 	  	for(int i=0; i< hashlen; i++) printf("%02x",hash1[i]);  puts("");
 	}
 	catch (std::exception& e)

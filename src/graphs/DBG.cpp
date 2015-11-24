@@ -53,12 +53,12 @@ DBG::process(const uint8_t x[H_LEN], const std::string structure,
         _hashfast->Hash(j, tmp, r + idx(i-1,sigma(garlic,i-1,j),c,m) * H_LEN_FAST,
 		        r + idx(i,j,c,m) * H_LEN_FAST);
       }
+
     //}
     
   }
   co = (co + (i-1)) % 3;
   memcpy(h, r + idx(0,c-1,c,m) * H_LEN_FAST, H_LEN_FAST);
-
   free(tmp);
 }
 #pragma GCC diagnostic pop
