@@ -50,9 +50,7 @@ Catena::_Catena( uint8_t *pwd,   const uint32_t pwdlen,
     _hash->Hash1(_versionID, 
         strlen((char*)_versionID), hv); 
   }
-
   
-
   /* Compute Tweak */
   t[0] = tweak_id;
   t[1] = std::count(structure.begin(), structure.end(), 'g');

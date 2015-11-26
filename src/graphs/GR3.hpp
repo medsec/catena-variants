@@ -29,7 +29,7 @@ private:
 	/*Return the reverse bit order of x where x is interpreted as n-bit value*/
 	uint64_t reverse(uint64_t x, const uint8_t n);
 
-	std::string const VERSION_ID = "Gray-Rev";
+	std::string const VERSION_ID = "LanternflyThree";
 	//same as BRG because of similar speed
 	std::string const STRUCTURE = "grg";
 	uint8_t const GARLIC = 21;
