@@ -26,9 +26,7 @@ GR3::process(const uint8_t x[H_LEN], const std::string structure,
 
 	/* naive implementation that used 2* 2^g memory */
 
-	//for (k = 0; k < lambda; k++) {
-		//_hashfull->Hash2(r + (c-1)*H_LEN, H_LEN, r, H_LEN, r+(c*H_LEN));
-		H_First(r + (c-1)*H_LEN_FAST, r, r);
+		H_First(r + (c-1)*H_LEN_FAST, r, r + c*H_LEN_FAST);
 		_hashfast->ResetState();
 
 		for (i = 1; i < c; i++) {
@@ -36,7 +34,6 @@ GR3::process(const uint8_t x[H_LEN], const std::string structure,
 				r+((c+i)*H_LEN_FAST));
 		}
 		memcpy(r, r+(c*H_LEN_FAST), c*H_LEN_FAST); // v <- r
-	//}
 
 	/* reverse(c - 1, garlic) == c - 1 */
 	memcpy(h, r + (c - 1) * H_LEN_FAST, H_LEN_FAST);
@@ -79,6 +76,10 @@ GR3::getMemoryRequirement(uint8_t garlic)const
 	return 2*(UINT64_C(1) << garlic) * H_LEN_FAST;
 }
 
+void 
+GR3::resetState()
+{
+}
 
 std::string
 GR3::getDefaultStructure()const{

@@ -83,6 +83,10 @@ BRG::getMemoryRequirement(uint8_t garlic)const
 	return (UINT64_C(1) << garlic) * H_LEN_FAST;
 }
 
+void BRG::resetState()
+{
+  currentLambda = 0;
+}
 
 std::string
 BRG::getDefaultStructure()const{

@@ -19,6 +19,9 @@ DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const std::string 
 	const uint8_t garlic, const uint8_t *salt, const uint8_t saltlen, 
 	uint8_t* h)
 {
+	/*reset state to clear previous graph remains*/
+	_graph->resetState();
+
 	const uint16_t H_LEN_FAST = _hashfast->getHlenFast();
 	const uint64_t c = UINT64_C(1) << garlic;
 	/* allocate memory for all further steps */
@@ -32,12 +35,13 @@ DefaultAlgorithm::flap(const uint8_t* x, const uint16_t xlen, const std::string 
 	_hashfast->Hash(0, vm1, vm2, r);
 	_hashfast->Hash(1, r, vm1, r+H_LEN_FAST);
 
+
 	/* Top row */
 
 	for(uint64_t i = 2; i < c; i++){
 		_hashfast->Hash(i, r + (i-1)*H_LEN_FAST, r + (i-2)*H_LEN_FAST, r + i*H_LEN_FAST);
 	}
-
+	
 	for(uint16_t i = 0; i<structure.length(); i++) {
     	switch(structure[i]){
     		case 'g':

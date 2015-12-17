@@ -2,7 +2,6 @@
 
 #include "blake2b1.hpp" 
 #include "../registry.hpp"
-
 #if defined(__SSE2__)
 //SSE optimized
 #include "blake2-sse/blake2-config.h"
@@ -320,6 +319,7 @@ static inline void blake2round(blake2b_state* S,
 #undef ROUND
 }
 
+
 void 
 Blake2b1::Hash(int vindex, const uint8_t* i1, 
        const uint8_t* i2, uint8_t* hash){
@@ -327,13 +327,15 @@ Blake2b1::Hash(int vindex, const uint8_t* i1,
 
   memcpy(_state->buf, i1, H_LEN);
   memcpy(_state->buf + H_LEN, i2, H_LEN);
+
   _state->buflen = 128;
   blake2b_increment_counter(_state, _state->buflen);
   blake2b_set_lastblock(_state);
   //No Padding necessary because the last 1024bits of _state.buf are 0 anyways
   const int rindex = vindex % 12;
+
   blake2round(_state, _state->buf, rindex);
-  
+
   for( int i = 0; i < 8; ++i ) /* Output full hash to temp buffer */
     store64( buffer + sizeof(_state->h[i] ) * i, _state->h[i] );
 

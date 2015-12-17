@@ -42,7 +42,6 @@ static const uint8_t blake2b_sigma[12][16] =
   { 14, 10,  4,  8,  9, 15, 13,  6,  1, 12,  0,  2, 11,  7,  5,  3 }
 };
 
-
 static inline int blake2b_set_lastnode( blake2b_state *S )
 {
   S->f[1] = ~0ULL;
@@ -119,8 +118,8 @@ static inline int blake2b_param_set_node_depth( blake2b_param *P, const uint8_t 
 }
 
 static inline int blake2b_param_set_inner_length( blake2b_param *P, const uint8_t inner_length )
-{
-  P->inner_length = inner_length;
+
+{  P->inner_length = inner_length;
   return 0;
 }
 
@@ -154,6 +153,7 @@ int blake2b_init_param( blake2b_state *S, const blake2b_param *P )
   /* IV XOR ParamBlock */
   for( size_t i = 0; i < 8; ++i )
     S->h[i] ^= load64( p + sizeof( S->h[i] ) * i );
+
 
   return 0;
 }
@@ -233,6 +233,7 @@ static int blake2b_compress( blake2b_state *S, const uint8_t block[BLAKE2B_BLOCK
   v[13] = S->t[1] ^ blake2b_IV[5];
   v[14] = S->f[0] ^ blake2b_IV[6];
   v[15] = S->f[1] ^ blake2b_IV[7];
+
 #define G(r,i,a,b,c,d) \
   do { \
     a = a + b + m[blake2b_sigma[r][2*i+0]]; \
@@ -268,6 +269,7 @@ static int blake2b_compress( blake2b_state *S, const uint8_t block[BLAKE2B_BLOCK
   ROUND( 10 );
   ROUND( 11 );
 
+
   for( i = 0; i < 8; ++i )
     S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
 
@@ -275,6 +277,8 @@ static int blake2b_compress( blake2b_state *S, const uint8_t block[BLAKE2B_BLOCK
 #undef ROUND
   return 0;
 }
+
+
 
 /* inlen now in bytes */
 int blake2b_update( blake2b_state *S, const uint8_t *in, uint64_t inlen )

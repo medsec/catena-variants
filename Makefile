@@ -22,8 +22,10 @@ SSE_TAGS = $(shell /bin/grep -m 1 flags /proc/cpuinfo | /bin/grep -o \
 
 ifneq (${SSE_TAGS},) 
     #Choose optimized hash function
-    HDIR=./src/hashes/blake2-sse
+	HDIR=./src/hashes/blake2-sse
 	HASH=$(HDIR)/blake2b.c
+
+
 else
 	#use reference implementation
     HDIR=./src/hashes/blake2-ref

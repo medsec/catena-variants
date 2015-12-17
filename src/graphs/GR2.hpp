@@ -15,6 +15,8 @@ public:
 
 	virtual uint64_t getMemoryRequirement(uint8_t garlic)const;
 
+	virtual void resetState();
+
 	virtual std::string getDefaultStructure()const;
  	virtual uint8_t getDefaultGarlic()const;
  	virtual uint8_t getDefaulMinGarlic()const;
@@ -27,7 +29,7 @@ private:
 	/*Return the reverse bit order of x where x is interpreted as n-bit value*/
 	uint64_t reverse(uint64_t x, const uint8_t n);
 
-	std::string const VERSION_ID = "Gray-Rev";
+	std::string const VERSION_ID = "LanternflyTwo";
 	//same as BRG because of similar speed
 	std::string const STRUCTURE = "gggrg";
 	uint8_t const GARLIC = 21;
