@@ -1,5 +1,7 @@
 Catena-Variants
 ================
+**This implementation is outdated does not comply with the current specification of Catena**
+
 This is a flexible C++-port of the Catena password scrambler. In contrast
 to the reference implementation, it allows easy extension and modification of
 Catena's internal parts. This flexibility comes with the downside of
